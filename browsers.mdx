@@ -1,0 +1,99 @@
+---
+title: Browsers
+description:
+  "Fully capable Chrome instances with Extensions and remote control support."
+---
+
+Browserbase gives you access to a Chromium Browser (custom-built for advanced
+performances and [Stealth Mode](/stealth-mode)).
+
+## Configuration
+
+- Chrome flag used by default
+- Downloaded files are stored by default and
+  [accessible via the API](/session#downloading-files)
+
+## Resources & Limits
+
+- _TODO: list resources allocated to the Browser_
+
+## Patterns
+
+### Control the Browser remotely
+
+Some use cases benefit from human-in-the-loop functionality. As you may have
+noticed in the Playground, our browsers can be controlled remotely. Please note
+this is an experimental feature. We're still working on improving browser
+compatibility and reliability. For now, this page will only load on Chromium
+browsers.
+
+1. Use the [Session API](/api-reference/sessions) to create a new session.
+2. Then, use the [Session API debug endpoint](/api-reference/sessions) to get
+   the `debuggerUrl`.
+3. Finally, load an iFrame with the `debuggerUrl` as the src and
+   `sandbox="allow-same-origin allow-scripts"`. The sandbox permissions are
+   necessary for now as we continue to customize our Chrome Dev Tools
+   implementation:
+
+```html
+<iframe
+  src="https://api.browserbase.com/devtools/inspector.html?wss=api.browserbase.com/debug/6e830201-e20f-42a4-accd-6024dd1ed155/devtools/page/3B9E111446C093708541256B9FF57189"
+  sandbox="allow-same-origin allow-scripts"
+/>
+```
+
+{/* TODO: where the iframe should be loaded?!! */}
+
+### Loading a custom extension
+
+A custom Chrome extension is necessary for some use cases to enable advanced
+browser features. Extension support with headless Chrome has always been
+limited, but with Browserbase, it's easy.
+
+1. First, use the [Extension API upload endpoint](/api-reference/extensions) to
+   upload an extension and get back an extension `id`
+
+<Note>
+
+- You must upload a valid unpacked chrome extension, in a .zip file format
+  containing a manifest.json at the root.
+- Starting a session with a chrome extension will increase session creation time
+  slightly, as we have to load the extension and restart the browser.
+
+</Note>
+
+2. Then, use the [Session API create session endpoint](/api-reference/sessions)
+   to create a new session. Make sure to include `extensionId` in the body.
+3. Finally,
+   [connect to the browser using the `session id`](/api-reference/sessions):
+
+`wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+
+To confirm your extension is loaded, use the following snippet:
+
+{/* TODO: Puppeteer + Selenium examples */}
+
+```js
+import { chromium } from "playwright-core";
+(async () => {
+  const session = await createSession();
+  // Specify the URL and expected title for the test
+  const url = "chrome://extensions";
+
+  // Launch a browser instance
+  const browser = await chromium.connectOverCDP(
+    `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${session.id}`,
+  );
+
+  // Create a new page
+  const page = await browser.newPage();
+  // Navigate to the URL
+  await page.goto(url);
+  const element = await page
+    .getByRole("heading", { name: "My custom chrome extension" })
+    .textContent();
+
+  // Ensure the browser is closed after the test
+  await browser.close();
+})();
+```

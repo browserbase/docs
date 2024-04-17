@@ -1,86 +1,185 @@
 ---
-title: 'Quickstart'
-description: 'Start building awesome documentation in under 5 minutes'
+title: "Quickstart"
+description: "Run your first Browser Session in under a minute"
 ---
 
-## Setup your development
+Let's run a first session from the Playground, inspect it with
+[Session Replay](/sessions), and finally start a session using your code.
 
-Learn how to update your docs locally and and deploy them to the public.
+## Run your first Browser session in the Playground
 
-### Edit and preview
+Browserbase's Dashboard comes with a Playground to test and iterate on your
+automation scripts or data extraction snippets directly from your browser:
 
-<AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `mint.json` is): ``` mintlify dev ```
-  </Accordion>
-</AccordionGroup>
+<Frame caption="Your experimentation space, with direct screen recording access.">
+  <img src="/images/quickstart/playground.png" />
+</Frame>
 
-### Deploy your changes
+<br />
 
-<AccordionGroup>
+### Your first Session
 
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
+<Steps>
+  <Step title="Go to the Playground">
+    <Card title="Open the Playground" href="https://www.browserbase.com/playground">
+      Hit the "Run" button, wait for the session to end, and navigate to the Session.
+    </Card>
+  </Step>
+  <Step title="Inspect your Browser Session">
+    Congrats, you've run your first Browser Session on Browserbase!
+    Let's take a closer look at it.
 
-</AccordionGroup>
+    The Session page offers you a full Session Replay with screen recording, network, and Chrome Console logs for each step:
 
-## Update your docs
+    <Frame caption="Session Replay gives you full visibility on a Session's run.">
+      <img src="/images/quickstart/session-replay.png" />
+    </Frame>
 
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
+    Learn more on [Session Replay](/sessions) capabilities on the Sessions documentation.
 
-<CardGroup>
+  </Step>
+</Steps>
 
-<Card title="Style Your Docs" icon="paintbrush" href="/settings/global">
-  Add flair to your docs with personalized branding.
-</Card>
+Let's now move to integrate Browserbase with your code.
+
+## Start a Browser session from the code
+
+<Steps>
+  <Step title="Get your API Key">
+    Go over the [Dashboard's Settings tab](https://www.browserbase.com/settings):
+
+    <Frame caption="Then copy your API Key directly from the input">
+      <img src="/images/quickstart/api-key.png" />
+    </Frame>
+
+  </Step>
+  <Step title="Update and your code">
+    Running your existing code with Browserbase only requires a few line changes:
+
+    <CodeGroup>
+
+    ```javascript Playwright
+    import { chromium } from "playwright-core";
+
+    (async () => {
+      const browser = await chromium.connectOverCDP(
+        `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
+      );
+
+      // It's important to get the default context to ensure the sessions are recorded.
+      const defaultContext = browser.contexts()[0];
+      const page = defaultContext.pages()[0];
+
+      await page.goto("https://browserbase.com/");
+      await page.close();
+      await browser.close();
+    })();
+    ```
+
+    ```javascript Puppeteer
+    import puppeteer from "puppeteer-core";
+
+    (async () => {
+      const browser = await puppeteer.connect({
+        browserWSEndpoint:
+        `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
+      });
+
+      const page = await browser.newPage();
+
+      await page.goto("https://www.browserbase.com");
+      await page.close();
+      await browser.close();
+    })();
+    ```
+
+    ```javascript Selenium
+    import http from "http";
+    import webdriver from "selenium-webdriver";
+    import chrome from "selenium-webdriver/chrome";
+
+    async function createSession() {
+      const response = await fetch(`https://www.browserbase.com/v1/sessions`, {
+        method: 'POST',
+        headers: {
+          "x-bb-api-key": process.env.BROWSERBASE_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ projectId: process.env.BROWSERBASE_PROJECT_ID })
+      });
+      return await response.json();
+    }
+
+
+    (async () => {
+      const session = await createSession();
+
+      const customHttpAgent = new http.Agent({});
+      (customHttpAgent as any).addRequest = (req: any, options: any) => {
+        // Session ID needs to be set here
+        req.setHeader("session-id", session.id);
+        req.setHeader("x-bb-api-key", process.env.BROWSERBASE_API_KEY);
+        (http.Agent.prototype as any).addRequest.call(customHttpAgent, req, options);
+      };
+
+      // We set a debuggerAddress so the server-side WebDriver can connect.
+      const options = new chrome.Options();
+      options.debuggerAddress("localhost:9223");
+
+      const driver = new webdriver.Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(options)
+        .usingHttpAgent(customHttpAgent)
+        .usingServer(
+          `http://api.browserbase.com/webdriver` // Selenium only supports HTTP
+        )
+        .build();
+
+      await driver.get("https://www.browserbase.com");
+
+      // Make sure to quit the driver so your session is ended!
+      await driver.quit();
+    })();
+    ```
+
+    </CodeGroup>
+
+    <Note>Update your `.env` by adding the `BROWSERBASE_API_KEY` entry or remember to prefix your bash command when running your code with `BROWSERBASE_API_KEY=xxx node my-script.js`.</Note>
+
+  </Step>
+  <Step title="Inspect the completed Session">
+    You can find all the recent sessions on the Dashboard's Overview, along with essential metrics:
+
+    <Frame>
+      <img src="/images/quickstart/dashboard.png" />
+    </Frame>
+
+    Select your Session to access its [Session Replay](/sessions) (showcased in the [previous section](#your-first-session)).
+
+  </Step>
+</Steps>
+
+## Start building
+
+<CardGroup cols={2}>
+
+{" "}
 
 <Card
-  title="Add API Endpoints"
-  icon="square-code"
-  href="/api-playground/configuration"
+  title="Browserbase Dashboard"
+  icon="book"
+  iconType="light"
+  href="/dashboard"
 >
-  Implement your OpenAPI spec and enable API user interaction.
+  Explore all Browserbase capabilities, starting with the Dashboard
 </Card>
-
 <Card
-  title="Integrate Analytics"
-  icon="chart-mixed"
-  href="/analytics/supported-integrations"
+  title="Sessions API"
+  icon="server"
+  iconType="light"
+  href="/under-the-hood"
 >
-  Draw insights from user interactions with your documentation.
-</Card>
-
-<Card
-  title="Host on a Custom Domain"
-  icon="browser"
-  href="/settings/custom-domain/subdomain"
->
-  Keep your docs on your own website's subdomain.
+  Get full control of the Browser's Sessions with the Sessions REST API.
 </Card>
 
 </CardGroup>
