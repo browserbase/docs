@@ -62,7 +62,16 @@
     },
     {
       "group": "Integrations",
-      "pages": ["langchain", "llama-index"]
+      "pages": [
+        {
+          "group": "Langchain",
+          "pages": ["integrations/langchain/python"]
+        },
+        {
+          "group": "LlamaIndex",
+          "pages": ["integrations/llama-index/python"]
+        }
+      ]
     },
     {
       "group": "APIs Documentation",
