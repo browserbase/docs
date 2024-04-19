@@ -4,7 +4,8 @@ description: "Run your first Browser Session in under a minute"
 ---
 
 Let's run a first session from the Playground, inspect it with
-[Session Replay](/features/sessions), and finally start a session using your code.
+[Session Replay](/features/sessions), and finally start a session using your
+code.
 
 ## Run your first Browser session in the Playground
 
@@ -150,7 +151,7 @@ Let's now move to integrate Browserbase with your code.
         browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}')
         context = browser.contexts[0]
         page = context.pages[0]
-        
+
     with sync_playwright() as playwright:
         run(playwright)
     ```
@@ -182,7 +183,7 @@ Let's now move to integrate Browserbase with your code.
   title="Browserbase Dashboard"
   icon="book"
   iconType="light"
-  href="/dashboard"
+  href="/features/dashboard"
 >
   Explore all Browserbase capabilities, starting with the Dashboard
 </Card>

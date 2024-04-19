@@ -3,13 +3,15 @@ title: Stealth Mode
 description: "Proxies, Captcha solving, and bot avoidance."
 ---
 
-Browserbase's [custom-built Chromium Browser](/features/browsers.mdx) comes with a set of features enabling you to navigate in Stealth mode.
+Browserbase's [custom-built Chromium Browser](/features/browsers.mdx) comes with
+a set of features enabling you to navigate in Stealth mode.
 
 ## Features
 
 ### Proxies & Residential IPs
 
-Each Sessions gets a new Residential IP. Proxies, provided by our vendors, can be enabled as follows with the `enableProxy=true` param:
+Each Sessions gets a new Residential IP. Proxies, provided by our vendors, can
+be enabled as follows with the `enableProxy=true` param:
 
 <CodeGroup>
 
@@ -56,26 +58,28 @@ Each Sessions gets a new Residential IP. Proxies, provided by our vendors, can b
         browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true')
         context = browser.contexts[0]
         page = context.pages[0]
-        
+
     with sync_playwright() as playwright:
         run(playwright)
     ```
 
     </CodeGroup>
 
-
 ### Fingerprinting
 
 The viewport, user agents and headers are handled by the fingerprint mechanism.
-The fingerprint mechanism will be configurable in the future along with geolocation.
+The fingerprint mechanism will be configurable in the future along with
+geolocation.
 
-We also plan to implement advanced Stealth mechanisms such as user gesture impersonation.
+We also plan to implement advanced Stealth mechanisms such as user gesture
+impersonation.
 
 ### Captcha solving
 
 Captcha solvers are currently in beta, please reach out to us to test it.
 
 ## Limitations
+
 - We bundle proxies into the browser so you don't have to worry about it. This
   means that bringing your own proxy vendor is not supported at this time.
 - Additionally, some high-risk categories are restricted by our proxy vendors

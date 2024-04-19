@@ -44,15 +44,17 @@ take a closer look at it:
     end
 ```
 
-_The Browserbase infrastructure handles all the heavy lifting of managing a fleet of Browser instances as well as the maintenance burden of integrating with reliable and up-to-date proxy and captcha solver providers._
+_The Browserbase infrastructure handles all the heavy lifting of managing a
+fleet of Browser instances as well as the maintenance burden of integrating with
+reliable and up-to-date proxy and captcha solver providers._
 
 ## Dashboard
 
 The Dashboard is the collaborative place to access real-time information to all
 [Sessions](/features/sessions) and essential metrics.
 
-[Session Replay](/features/session-replay) is the central feature, providing video
-replay, logs, and other Chrome Devtools data for a specific Session.
+[Session Replay](/features/session-replay) is the central feature, providing
+video replay, logs, and other Chrome Devtools data for a specific Session.
 
 <Frame caption="Session Replay gives you full visibility on a Session's run.">
   <img src="/images/quickstart/session-replay.png" />
@@ -79,17 +81,20 @@ replay, logs, and other Chrome Devtools data for a specific Session.
 ## APIs and Orchestrator
 
 Through the Orchestrator, Browserbase offers multiple public APIs
-([Sessions API](/api-reference/sessions),
-[Extensions API](/api-reference/extensions)), granting direct access to the
-underlying Browser Sessions.
+([Sessions API](/api-reference/list-all-sessions),
+[Extensions API](/api-reference/upload-an-extension)), granting direct access to
+the underlying Browser Sessions.
 
 The Orchestrator is vital in:
 
-- Maintaining the [Sessions's state](/features/sessions#sessions-lifecycle) by managing
-  the Serverless infrastructure and resources allocation
-- Capturing [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/) data including logs and network data used
-  by the [Session Replay](/features/session-replay)
-- Recording live session using [rrweb](https://www.rrweb.io/) enabling introspectable replays
+- Maintaining the [Sessions's state](/features/sessions#sessions-lifecycle) by
+  managing the Serverless infrastructure and resources allocation
+- Capturing
+  [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
+  data including logs and network data used by the
+  [Session Replay](/features/session-replay)
+- Recording live session using [rrweb](https://www.rrweb.io/) enabling
+  introspectable replays
 
 <CardGroup cols={2}>
 
@@ -107,7 +112,7 @@ The Orchestrator is vital in:
   title="Sessions API"
   icon="server"
   iconType="light"
-  href="/reference/session-api"
+  href="/api-reference/list-all-sessions"
 >
   Get full control of the Sessions
 </Card>
@@ -119,17 +124,23 @@ The Orchestrator is vital in:
 All Sessions run on a custom Chromium with advanced Stealth capabilities and
 performance improvements, without cold starts.
 
-[Browsers](/features/browsers) are powered by an autoscaled and secured architecture,
-providing all the benefits of Serverless infrastructure with fine-grained
-control of resources.
+[Browsers](/features/browsers) are powered by an autoscaled and secured
+architecture, providing all the benefits of Serverless infrastructure with
+fine-grained control of resources.
 
-Each Browser Session runs in a isolated container with a dedicated ressources, network and a [new residential IP](/features/stealth-mode).
+Each Browser Session runs in a isolated container with a dedicated ressources,
+network and a [new residential IP](/features/stealth-mode).
 
 <CardGroup cols={2}>
 
 {" "}
 
-<Card title="Stealth mode" icon="book" iconType="light" href="/features/stealth-mode">
+<Card
+  title="Stealth mode"
+  icon="book"
+  iconType="light"
+  href="/features/stealth-mode"
+>
   Learn more about Stealth capabilities
 </Card>
 <Card title="Browsers" icon="server" iconType="light" href="/features/browsers">

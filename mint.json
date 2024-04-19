@@ -75,11 +75,22 @@
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Sessions API",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/list-all-sessions",
+        "api-reference/create-a-session",
+        "api-reference/retrieve-a-session",
+        "api-reference/update-a-session",
+        "api-reference/retrieve-a-session-recording",
+        "api-reference/retrieve-a-session-downloads",
+        "api-reference/retrieve-a-session-debug-connection-urls",
+        "api-reference/retrieve-a-session-downloads-1"
+      ]
+    },
+    {
+      "group": "Extensions API",
+      "pages": [
+        "api-reference/upload-an-extension"
       ]
     }
   ],

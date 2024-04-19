@@ -10,19 +10,24 @@ performances and [Stealth Mode](/features/stealth-mode)).
 ## Configuration
 
 The Browser Sessions runs on with the following Chromium flags:
+
 - `--headless=new`
 - `--no-sandbox`
 - `--disable-blink-features=AutomationControlled`
 
-The viewport, user agents and header configuration is handled by the [fingerprint mechanism](/features/stealth-mode).
+The viewport, user agents and header configuration is handled by the
+[fingerprint mechanism](/features/stealth-mode).
 
-Downloads are enabled and stored by default, [accessible via the API](/features/sessions#downloading-files)
+Downloads are enabled and stored by default,
+[accessible via the API](/features/sessions#downloading-files)
 
 ## Resources & Limits
 
-Browser Sessions runs on fast and dedicated instances with isolated resources (storage, network, memory and vCPUs).
+Browser Sessions runs on fast and dedicated instances with isolated resources
+(storage, network, memory and vCPUs).
 
 The following limits exist and are being worked on:
+
 - Only Chromium is available.
 - File uploads are untested, contact us in case of issues.
 - Browser instances currently run without GPUs, expect slower animations.
@@ -37,13 +42,14 @@ this is an experimental feature. We're still working on improving browser
 compatibility and reliability. For now, this page will only load on Chromium
 browsers.
 
-1. Use the [Session API](/api-reference/sessions) to create a new session.
-2. Then, use the [Session API debug endpoint](/api-reference/sessions) to get
-   the `debuggerUrl`.
-3. Finally, load an iFrame with the `debuggerUrl` or `debuggerFullscreenUrl` (_recommended_) as the src and
-   `sandbox="allow-same-origin allow-scripts"`. The sandbox permissions are
-   necessary for now as we continue to customize our Chrome Dev Tools
-   implementation:
+1. Use the [Session API](/api-reference/list-all-sessions) to create a new
+   session.
+2. Then, use the [Session API debug endpoint](/api-reference/list-all-sessions)
+   to get the `debuggerUrl`.
+3. Finally, load an iFrame with the `debuggerUrl` or `debuggerFullscreenUrl`
+   (_recommended_) as the src and `sandbox="allow-same-origin allow-scripts"`.
+   The sandbox permissions are necessary for now as we continue to customize our
+   Chrome Dev Tools implementation:
 
 ```html
 <iframe
@@ -60,8 +66,9 @@ A custom Chrome extension is necessary for some use cases to enable advanced
 browser features. Extension support with headless Chrome has always been
 limited, but with Browserbase, it's easy.
 
-1. First, use the [Extension API upload endpoint](/api-reference/extensions) to
-   upload an extension and get back an extension `id`
+1. First, use the
+   [Extension API upload endpoint](/api-reference/upload-an-extension) to upload
+   an extension and get back an extension `id`
 
 <Note>
 
@@ -72,10 +79,11 @@ limited, but with Browserbase, it's easy.
 
 </Note>
 
-2. Then, use the [Session API create session endpoint](/api-reference/sessions)
-   to create a new session. Make sure to include `extensionId` in the body.
+2. Then, use the
+   [Session API create session endpoint](/api-reference/list-all-sessions) to
+   create a new session. Make sure to include `extensionId` in the body.
 3. Finally,
-   [connect to the browser using the `session id`](/api-reference/sessions):
+   [connect to the browser using the `session id`](/api-reference/list-all-sessions):
 
 `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
 
