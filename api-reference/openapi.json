@@ -104,7 +104,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to retrieve",
             "required": true,
@@ -166,7 +166,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to update",
             "required": true,
@@ -206,7 +206,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to retrieve",
             "required": true,
@@ -249,7 +249,7 @@
         "description": "Return the downloads as a .zip file",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to retrieve",
             "required": true,
@@ -290,7 +290,7 @@
         "description": "Get remote access to a Session",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to retrieve",
             "required": true,
@@ -360,7 +360,7 @@
         "summary": "Retrieve a Session logs",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
             "description": "ID of Session to retrieve",
             "required": true,
