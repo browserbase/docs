@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://connect.browserbase.com"
+      "url": "https://www.browserbase.com"
     }
   ],
   "security": [
@@ -471,7 +471,8 @@
         "properties": {
           "id": {
             "description": "A unique Session ID",
-            "type": "string"
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "createdAt": {
             "description": "",
@@ -479,7 +480,7 @@
             "format": "date-time"
           },
           "startedAt": {
-            "description": "Date and time when the Session transitioned to the RUNNING state.",
+            "description": "Date and time when the Session transitioned to the RUNNING state..",
             "type": "string",
             "format": "date-time"
           },
@@ -490,16 +491,19 @@
           },
           "projectId": {
             "description": "A unique Project ID",
-            "type": "string"
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "status": {
             "type": "string",
             "example": "CREATED",
+            "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
             "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
           },
           "taskId": {
-            "description": "A unique Project ID",
-            "type": "string"
+            "description": "The underlying Task ID",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "proxyBytes": {
             "description": "Proxy bytes Usage",
@@ -543,7 +547,8 @@
             "type": "string"
           },
           "timestamp": {
-            "type": "string"
+            "type": "string",
+            "example": "1713541653"
           },
           "method": {
             "type": "string"
@@ -552,7 +557,8 @@
             "type": "object",
             "properties": {
               "timestamp": {
-                "type": "string"
+                "type": "string",
+                "example": "1713541653"
               },
               "params": {
                 "type":"object"
@@ -566,7 +572,8 @@
             "type": "object",
             "properties": {
               "timestamp": {
-                "type": "string"
+                "type": "string",
+                "example": "1713541653"
               },
               "result": {
                 "type": "object"
@@ -593,7 +600,7 @@
           },
           "time": {
             "type": "string",
-            "example": "<timestamp>"
+            "example": "1713541653"
           },
           "data": {
             "type": "object",
@@ -608,10 +615,14 @@
         "type": "object",
         "properties": {
           "projectId": {
-            "type": "string"
+            "type": "string",
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "extensionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The uploaded Extension ID. See [Upload Extension](/api-reference/upload-an-extension).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           }
         }
       },
@@ -624,6 +635,7 @@
           "status": {
             "type": "string",
             "example": "CREATED",
+            "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
             "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
           }
         }
@@ -635,7 +647,8 @@
         "type": "object",
         "properties": {
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "Error message"
           }
         }
       },
@@ -647,8 +660,9 @@
         "type": "object",
         "properties": {
           "projectId": {
-            "description": "The Project ID",
-            "type": "string"
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "file": {
             "type": "string",
@@ -665,14 +679,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           },
           "fileName": {
             "type": "string",
             "example": "extension_name.zip"
           },
           "projectId": {
-            "type": "string"
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           }
         }
       }
@@ -681,7 +697,8 @@
       "bearerAuth": {
         "type": "apiKey",
         "in": "header",
-        "name": "x-bb-api-key"
+        "name": "x-bb-api-key",
+        "description": "Your [Browserbase API Key](https://www.browserbase.com/settings)."
       }
     }
   }

@@ -1,32 +1,63 @@
-# Mintlify Starter Kit
+# Browserbase Documentation
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="images/logo.png"/>
+        <img alt="Defer logo" src="images/logo.png"/>
+    </picture>
+</p>
 
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
+<p align="center">
+    <a href="https://docs.browserbase.com">Documentation</a>
+    <span>&nbsp;·&nbsp;</span>
+    <a href="https://www.browserbase.com/">Website</a>
+</p>
+<br/>
 
-### Development
+## Introduction
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
+This repository contains the documentation of Browserbase. The documentation is built and deployed using [Mintlify](https://mintlify.com/).
 
-```
+## Quickstart
+
+Install dependencies with:
+
+```bash
 npm i -g mintlify
+npm install
 ```
 
-Run the following command at the root of your documentation (where mint.json is)
 
-```
+Run the local dev server:
+
+```bash
 mintlify dev
 ```
 
-### Publishing Changes
 
-Install our Github App to autopropagate changes from youre repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch. Find the link to install on your dashboard. 
+## Contributing
 
-#### Troubleshooting
+Before submitting any changes, remember to:
 
-- Mintlify dev isn't running - Run `mintlify install` it'll re-install dependencies.
-- Page loads as a 404 - Make sure you are running in a folder with `mint.json`
+1. Prettify the files:
+
+```bash
+npm run prettier
+```
+
+2. Check for broken links
+
+```bash
+mintlify broken-links
+```
+
+
+### Making changes to the API Reference documentation
+
+Edit the [`api-reference/openapi.json`](api-reference/openapi.json) file and run the following command to generate the MDX files accordingly:
+
+```
+npx @mintlify/scraping@latest openapi-file api-reference/openapi.json -o api-reference
+```
+
+Then update the [`mint.json`](./mint.json)'s `navigation` part accordingly.
