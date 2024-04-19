@@ -41,11 +41,6 @@
   },
   "anchors": [
     {
-      "name": "Guides",
-      "icon": "books",
-      "url": "guides"
-    },
-    {
       "name": "API Reference",
       "icon": "rectangle-terminal",
       "url": "api-reference"
@@ -58,7 +53,7 @@
     },
     {
       "group": "Features",
-      "pages": ["browsers", "sessions", "session-replay", "stealth-mode"]
+      "pages": ["features/browsers", "features/sessions", "features/session-replay", "features/stealth-mode"]
     },
     {
       "group": "Integrations",

@@ -18,11 +18,11 @@ Selenium), ready to receive actions to perform.
 
 <CodeGroup>
 
-```jsx Playwright
+```jsx Playwright (JavaScript)
 import { chromium } from "playwright-core";
 (async () => {
   const browser = await chromium.connectOverCDP(
-    `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
   );
   const defaultContext = browser.contexts()[0];
   const page = defaultContext.pages()[0];
@@ -31,47 +31,87 @@ import { chromium } from "playwright-core";
 
   await page.close();
   await browser.close();
-})();
+})().catch((error) => console.error(error.message));
 ```
 
-```jsx Puppeteer
+```jsx Puppeteer (JavaScript)
 import puppeteer from "puppeteer-core";
 
 (async () => {
   const browser = await puppeteer.connect({
-    browserWSEndpoint: `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
   });
   const page = await browser.newPage();
 
   await page.goto("https://www.browserbase.com");
   await page.close();
   await browser.close();
-})();
+})().catch((error) => console.error(error.message));
+```
+
+```python Python
+from playwright.sync_api import sync_playwright, Playwright
+
+def run(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}')
+    context = browser.contexts[0]
+    page = context.pages[0]
+    
+with sync_playwright() as playwright:
+    run(playwright)
 ```
 
 </CodeGroup>
 
 <Note>
-  A Session can be terminated using your Driver or via the [Browserbase
-  Dashboard](https://www.browserbase.com/overview)'s Session Page view
+  A Session created through the API needs to be started in the following 15min, otherwise it will moved automatically to the `COMPLETED` state.
 </Note>
 
 ### Session's lifecycle
 
-A Session can transition through multiple states and will always get `COMPLETED`
-assigned as a final state.
-
-_TODO:_
+A Session transitions through multiple states:
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Still
-    Still --> [*]
+    [*] --> NEW
+    ERROR --> [*]
 
-    Still --> Moving
-    Moving --> Still
-    Moving --> Crash
-    Crash --> [*]
+    note left of ERROR
+      Any error during the process moves the Session in ERROR state.
+
+      (Billing ends here)
+    end note
+
+    note left of NEW
+      Session created via the API
+      or a Driver (connectOverCDP())
+    end note
+
+    NEW --> PENDING
+
+    note right of PENDING
+      The Session is waiting for a Browser instance.
+    end note
+
+    PENDING --> RUNNING
+
+    note left of RUNNING
+      The Session is ready to accept actions.
+      (Billing begins here)
+    end note
+
+    RUNNING --> REQUEST_RELEASE: Note that a Session is released without connection under 15min
+    REQUEST_RELEASE --> RELEASING
+
+    note left of REQUEST_RELEASE
+      The Session has been requested to stop.
+
+      (Billing stops at this state completion)
+    end note
+
+    RELEASING --> COMPLETED
+    COMPLETED --> [*]
 ```
 
 ### Inspecting a Session
@@ -108,7 +148,7 @@ That's a simple two-step process
 
 The resulting string should look something like this:
 
-`wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+`wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
 
 ### Downloading files
 
@@ -170,7 +210,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
   const { id: sessionId } = await createSession();
   const browser = await chromium.connectOverCDP(
     // we connect to a Session created via the API
-    `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
   );
   const defaultContext = browser.contexts()[0];
   const page = defaultContext.pages()[0];
@@ -204,7 +244,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
     // wait up to 20s to save the downloaded files locally
     await saveDownloadsOnDisk(sessionId, 20000)
   }
-})();
+})().catch((error) => console.error(error.message));
 ```
 
 ```jsx Puppeteer
@@ -252,7 +292,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
 	const browser = await puppeteer.connect({
     // we connect to a Session created via the API
     browserWSEndpoint:
-    `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
   });
   const page = await browser.newPage();
 
@@ -270,7 +310,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
 
   // wait up to 20s to save the downloaded files locally
   await saveDownloadsOnDisk(sessionId, 20000)
-})();
+})().catch((error) => console.error(error.message));
 ```
 
 </CodeGroup>

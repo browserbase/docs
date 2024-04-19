@@ -5,17 +5,27 @@ description:
 ---
 
 Browserbase gives you access to a Chromium Browser (custom-built for advanced
-performances and [Stealth Mode](/stealth-mode)).
+performances and [Stealth Mode](/features/stealth-mode)).
 
 ## Configuration
 
-- Chrome flag used by default
-- Downloaded files are stored by default and
-  [accessible via the API](/session#downloading-files)
+The Browser Sessions runs on with the following Chromium flags:
+- `--headless=new`
+- `--no-sandbox`
+- `--disable-blink-features=AutomationControlled`
+
+The viewport, user agents and header configuration is handled by the [fingerprint mechanism](/features/stealth-mode).
+
+Downloads are enabled and stored by default, [accessible via the API](/features/sessions#downloading-files)
 
 ## Resources & Limits
 
-- _TODO: list resources allocated to the Browser_
+Browser Sessions runs on fast and dedicated instances with isolated resources (storage, network, memory and vCPUs).
+
+The following limits exist and are being worked on:
+- Only Chromium is available.
+- File uploads are untested, contact us in case of issues.
+- Browser instances currently run without GPUs, expect slower animations.
 
 ## Patterns
 
@@ -30,14 +40,14 @@ browsers.
 1. Use the [Session API](/api-reference/sessions) to create a new session.
 2. Then, use the [Session API debug endpoint](/api-reference/sessions) to get
    the `debuggerUrl`.
-3. Finally, load an iFrame with the `debuggerUrl` as the src and
+3. Finally, load an iFrame with the `debuggerUrl` or `debuggerFullscreenUrl` (_recommended_) as the src and
    `sandbox="allow-same-origin allow-scripts"`. The sandbox permissions are
    necessary for now as we continue to customize our Chrome Dev Tools
    implementation:
 
 ```html
 <iframe
-  src="https://api.browserbase.com/devtools/inspector.html?wss=api.browserbase.com/debug/6e830201-e20f-42a4-accd-6024dd1ed155/devtools/page/3B9E111446C093708541256B9FF57189"
+  src="https://connect.browserbase.com/devtools/inspector.html?wss=connect.browserbase.com/debug/6e830201-e20f-42a4-accd-6024dd1ed155/devtools/page/3B9E111446C093708541256B9FF57189"
   sandbox="allow-same-origin allow-scripts"
 />
 ```
@@ -67,7 +77,7 @@ limited, but with Browserbase, it's easy.
 3. Finally,
    [connect to the browser using the `session id`](/api-reference/sessions):
 
-`wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+`wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
 
 To confirm your extension is loaded, use the following snippet:
 
@@ -82,7 +92,7 @@ import { chromium } from "playwright-core";
 
   // Launch a browser instance
   const browser = await chromium.connectOverCDP(
-    `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${session.id}`,
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${session.id}`,
   );
 
   // Create a new page
@@ -95,5 +105,5 @@ import { chromium } from "playwright-core";
 
   // Ensure the browser is closed after the test
   await browser.close();
-})();
+})().catch((error) => console.error(error.message));
 ```

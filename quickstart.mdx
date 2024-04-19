@@ -4,7 +4,7 @@ description: "Run your first Browser Session in under a minute"
 ---
 
 Let's run a first session from the Playground, inspect it with
-[Session Replay](/sessions), and finally start a session using your code.
+[Session Replay](/features/sessions), and finally start a session using your code.
 
 ## Run your first Browser session in the Playground
 
@@ -35,7 +35,7 @@ automation scripts or data extraction snippets directly from your browser:
       <img src="/images/quickstart/session-replay.png" />
     </Frame>
 
-    Learn more on [Session Replay](/sessions) capabilities on the Sessions documentation.
+    Learn more on [Session Replay](/features/sessions) capabilities on the Sessions documentation.
 
   </Step>
 </Steps>
@@ -58,12 +58,12 @@ Let's now move to integrate Browserbase with your code.
 
     <CodeGroup>
 
-    ```javascript Playwright
+    ```javascript Playwright (JavaScript)
     import { chromium } from "playwright-core";
 
     (async () => {
       const browser = await chromium.connectOverCDP(
-        `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
+        `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
       );
 
       // It's important to get the default context to ensure the sessions are recorded.
@@ -73,16 +73,16 @@ Let's now move to integrate Browserbase with your code.
       await page.goto("https://browserbase.com/");
       await page.close();
       await browser.close();
-    })();
+    })().catch((error) => console.error(error.message));
     ```
 
-    ```javascript Puppeteer
+    ```javascript Puppeteer (JavaScript)
     import puppeteer from "puppeteer-core";
 
     (async () => {
       const browser = await puppeteer.connect({
         browserWSEndpoint:
-        `wss://api.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
+        `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
       });
 
       const page = await browser.newPage();
@@ -90,10 +90,10 @@ Let's now move to integrate Browserbase with your code.
       await page.goto("https://www.browserbase.com");
       await page.close();
       await browser.close();
-    })();
+    })().catch((error) => console.error(error.message));
     ```
 
-    ```javascript Selenium
+    ```javascript Selenium (JavaScript)
     import http from "http";
     import webdriver from "selenium-webdriver";
     import chrome from "selenium-webdriver/chrome";
@@ -131,7 +131,7 @@ Let's now move to integrate Browserbase with your code.
         .setChromeOptions(options)
         .usingHttpAgent(customHttpAgent)
         .usingServer(
-          `http://api.browserbase.com/webdriver` // Selenium only supports HTTP
+          `http://connect.browserbase.com/webdriver` // Selenium only supports HTTP
         )
         .build();
 
@@ -139,7 +139,20 @@ Let's now move to integrate Browserbase with your code.
 
       // Make sure to quit the driver so your session is ended!
       await driver.quit();
-    })();
+    })().catch((error) => console.error(error.message));
+    ```
+
+    ```python Python
+    from playwright.sync_api import sync_playwright, Playwright
+
+    def run(playwright: Playwright):
+        chromium = playwright.chromium
+        browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}')
+        context = browser.contexts[0]
+        page = context.pages[0]
+        
+    with sync_playwright() as playwright:
+        run(playwright)
     ```
 
     </CodeGroup>
@@ -154,7 +167,7 @@ Let's now move to integrate Browserbase with your code.
       <img src="/images/quickstart/dashboard.png" />
     </Frame>
 
-    Select your Session to access its [Session Replay](/sessions) (showcased in the [previous section](#your-first-session)).
+    Select your Session to access its [Session Replay](/features/sessions) (showcased in the [previous section](#your-first-session)).
 
   </Step>
 </Steps>

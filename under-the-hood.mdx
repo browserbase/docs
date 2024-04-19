@@ -8,28 +8,50 @@ and fingerprinting challenges that working with headless browsers brings. Let's
 take a closer look at it:
 
 ```mermaid
-  flowchart LR
-    subgraph A [" "]
-        direction LR
-        dash[Dashboard]
+  flowchart
+    code["Your code"]
+    code<-->lb
 
-        subgraph Browserbase Infrastructure
-            direction TB
-            api[APIs]
-            orch[Orchestrator]-->browsers[Serverless Browsers]
+    subgraph A ["Browserbase"]
+        style A padding-top:100px;
+
+        dash[Playground]
+        dash-->lb
+        lb[Load Balancer + Auth]
+        webhooks[Webhooks Service]
+        %% hack to fix bad rendering of node label from mermaid
+        subgraph AA ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k8s cluster"]
+          chromium[Chromium]
         end
-    end
+        lb<-->chromium
 
-    dash-->api
-    api-->orch
+        subgraph B [Maintenance pain]
+          style B stroke:#f66,stroke-width:2px,stroke-dasharray: 5 5
+
+          proxy[Proxy Service]
+          proxyV[Proxy Vendors]
+          proxy-->proxyV
+          captcha[Captcha Bypass]
+          captchaV[Captcha Vendors]
+          captcha-->captchaV
+        end
+
+        chromium-->captcha
+        chromium-->proxy
+        obs[Observability Monitor]-->events[(Events DB)]
+        chromium-->obs
+        obs-->webhooks
+    end
 ```
+
+_The Browserbase infrastructure handles all the heavy lifting of managing a fleet of Browser instances as well as the maintenance burden of integrating with reliable and up-to-date proxy and captcha solver providers._
 
 ## Dashboard
 
 The Dashboard is the collaborative place to access real-time information to all
-[Sessions](/sessions) and essential metrics.
+[Sessions](/features/sessions) and essential metrics.
 
-[Session Replay](/session-replay) is the central feature, providing video
+[Session Replay](/features/session-replay) is the central feature, providing video
 replay, logs, and other Chrome Devtools data for a specific Session.
 
 <Frame caption="Session Replay gives you full visibility on a Session's run.">
@@ -47,7 +69,7 @@ replay, logs, and other Chrome Devtools data for a specific Session.
   title="Session Replay"
   icon="book"
   iconType="light"
-  href="/session-replay"
+  href="/features/session-replay"
 >
   Get the best of Session Replay
 </Card>
@@ -65,8 +87,9 @@ The Orchestrator is vital in:
 
 - Maintaining the [Sessions's state](/session#sessions-lifecycle) by managing
   the Serverless infrastructure and resources allocation
-- Capturing live session videos and Chrome Dev tools logs and network data used
-  by the [Session Replay](/session-replay)
+- Capturing [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/) data including logs and network data used
+  by the [Session Replay](/features/session-replay)
+- Recording live session using [rrweb](https://www.rrweb.io/) enabling introspectable replays
 
 <CardGroup cols={2}>
 
@@ -94,20 +117,22 @@ The Orchestrator is vital in:
 ## Serverless Browsers
 
 All Sessions run on a custom Chromium with advanced Stealth capabilities and
-performance improvements, removing cold starts.
+performance improvements, without cold starts.
 
-[Browsers](/browsers) are powered by an autoscaled and secured architecture,
+[Browsers](/features/browsers) are powered by an autoscaled and secured architecture,
 providing all the benefits of Serverless infrastructure with fine-grained
 control of resources.
+
+Each Browser Session runs in a isolated container with a dedicated ressources, network and a [new residential IP](/features/stealth-mode).
 
 <CardGroup cols={2}>
 
 {" "}
 
-<Card title="Stealth mode" icon="book" iconType="light" href="/stealth-mode">
+<Card title="Stealth mode" icon="book" iconType="light" href="/features/stealth-mode">
   Learn more about Stealth capabilities
 </Card>
-<Card title="Browsers" icon="server" iconType="light" href="/browsers">
+<Card title="Browsers" icon="server" iconType="light" href="/features/browsers">
   Explore our Browser features
 </Card>
 
