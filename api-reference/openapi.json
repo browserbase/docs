@@ -628,10 +628,16 @@
       },
       "UpdateSession": {
         "required": [
-          "status"
+          "status",
+          "projectId"
         ],
         "type": "object",
         "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
           "status": {
             "type": "string",
             "example": "CREATED",
