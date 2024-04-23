@@ -41,11 +41,6 @@
   },
   "anchors": [
     {
-      "name": "Guides",
-      "icon": "books",
-      "url": "guides"
-    },
-    {
       "name": "API Reference",
       "icon": "rectangle-terminal",
       "url": "api-reference"
@@ -99,20 +94,10 @@
       ]
     },
     {
-      "group": "",
-      "pages": [
-        "guides/overview"
-      ]
-    },
-    {
-      "group": "Patterns",
+      "group": "Guides",
       "pages": [
         "guides/browser-remote-control"
       ]
-    },
-    {
-      "group": "Use cases",
-      "pages": ["a"]
     }
   ],
   "footerSocials": {
