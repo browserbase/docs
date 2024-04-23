@@ -182,7 +182,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
         function fetchDownloads() {
             try {
               const response = await fetch(
-                `https://connect.browserbase.com/v1/sessions/${sessionId}/downloads`, {
+                `https://www.browserbase.com/v1/sessions/${sessionId}/downloads`, {
                   method: 'GET',
                   headers: {
                     Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`
@@ -263,7 +263,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
         function fetchDownloads() {
             try {
               const response = await fetch(
-                `https://connect.browserbase.com/v1/sessions/${sessionId}/downloads`, {
+                `https://www.browserbase.com/v1/sessions/${sessionId}/downloads`, {
                   method: 'GET',
                   headers: {
                     Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`

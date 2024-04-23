@@ -42,23 +42,12 @@ this is an experimental feature. We're still working on improving browser
 compatibility and reliability. For now, this page will only load on Chromium
 browsers.
 
-1. Use the [Session API](/api-reference/list-all-sessions) to create a new
-   session.
-2. Then, use the [Session API debug endpoint](/api-reference/list-all-sessions)
-   to get the `debuggerUrl`.
-3. Finally, load an iFrame with the `debuggerUrl` or `debuggerFullscreenUrl`
-   (_recommended_) as the src and `sandbox="allow-same-origin allow-scripts"`.
-   The sandbox permissions are necessary for now as we continue to customize our
-   Chrome Dev Tools implementation:
+1. Use the Session API to [create a new session](/api-reference/create-a-session).
+2. Then, use the [Session API debug endpoint](/api-reference/retrieve-a-session-debug-connection-urls)
+   to get the `debuggerFullscreenUrl`.
+3. Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking action on the session.
 
-```html
-<iframe
-  src="https://connect.browserbase.com/devtools/inspector.html?wss=connect.browserbase.com/debug/6e830201-e20f-42a4-accd-6024dd1ed155/devtools/page/3B9E111446C093708541256B9FF57189"
-  sandbox="allow-same-origin allow-scripts"
-/>
-```
-
-{/* TODO: where the iframe should be loaded?!! */}
+The following sections provide use cases with ready to use snippets.
 
 ### Loading a custom extension
 

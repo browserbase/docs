@@ -12,13 +12,13 @@ configured as follow:
 <CodeGroup>
 
 ```bash cURL
-curl -X GET "https://connect.browserbase.com/v1/sessions/${SESSION_ID}" \
+curl -X GET "https://www.browserbase.com/v1/sessions/${SESSION_ID}" \
      -H "x-bb-api-key: ${BROWSERBASE_API_KEY}" \
 ```
 
 ```js Node.js/Fetch
 const response = await fetch(
-  `https://connect.browserbase.com/v1/sessions/${sessionId}`,
+  `https://www.browserbase.com/v1/sessions/${sessionId}`,
   {
     method: "GET",
     headers: {

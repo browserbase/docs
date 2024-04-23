@@ -41,6 +41,11 @@
   },
   "anchors": [
     {
+      "name": "Guides",
+      "icon": "books",
+      "url": "guides"
+    },
+    {
       "name": "API Reference",
       "icon": "rectangle-terminal",
       "url": "api-reference"
@@ -92,6 +97,22 @@
       "pages": [
         "api-reference/upload-an-extension"
       ]
+    },
+    {
+      "group": "",
+      "pages": [
+        "guides/overview"
+      ]
+    },
+    {
+      "group": "Patterns",
+      "pages": [
+        "guides/browser-remote-control"
+      ]
+    },
+    {
+      "group": "Use cases",
+      "pages": ["a"]
     }
   ],
   "footerSocials": {
