@@ -12,7 +12,7 @@ instance to its termination (closed, timeout, or disconnected).
 
 A Session is either created on the fly, upon connection (via `connectOverCDP()`
 or `puppeteer.connect()`), or via the
-[Sessions API](/api-reference/list-all-sessions).
+[Sessions API](/api-reference/create-a-session).
 
 Once created, a Session can be connected to through a Driver (Playwright, Puppeteer, or
 Selenium).
@@ -118,7 +118,7 @@ stateDiagram-v2
 ### Inspecting a Session
 
 You can inspect a completed Session using the
-[Session API](/api-reference/list-all-sessions) or the Dashboard:
+[Session API](/api-reference/retrieve-a-session) or the Dashboard:
 
 | Action                                               | Browserbase Dashboard | Sessions API                                                |
 | ---------------------------------------------------- | --------------------- | ----------------------------------------------------------- |
