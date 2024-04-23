@@ -28,7 +28,7 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com",
+      "url": "https://go.crisp.chat/chat/embed/?website_id=c7f89ae9-ae21-4d06-a71b-951e2d2c6887",
       "type": "link"
     }
   ],
@@ -96,7 +96,8 @@
     {
       "group": "Guides",
       "pages": [
-        "guides/browser-remote-control"
+        "guides/browser-remote-control",
+        "guides/browser-contexts-and-pages"
       ]
     }
   ],
