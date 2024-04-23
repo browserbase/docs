@@ -10,7 +10,7 @@ a set of features enabling you to navigate in Stealth mode.
 
 ### Proxies & Residential IPs
 
-Each Sessions gets a new Residential IP. Proxies, provided by our vendors, can
+Each Session gets a new Residential IP. Proxies provided by our vendors can
 be enabled as follows with the `enableProxy=true` param:
 
 <CodeGroup>
@@ -23,7 +23,7 @@ be enabled as follows with the `enableProxy=true` param:
         `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`
       );
 
-      // It's important to get the default context to ensure the sessions are recorded.
+      // Getting the default context to ensure the sessions are recorded.
       const defaultContext = browser.contexts()[0];
       const page = defaultContext.pages()[0];
 
@@ -67,23 +67,22 @@ be enabled as follows with the `enableProxy=true` param:
 
 ### Fingerprinting
 
-The viewport, user agents and headers are handled by the fingerprint mechanism.
-The fingerprint mechanism will be configurable in the future along with
-geolocation.
+The fingerprint mechanism handles the viewport, user agents, and headers.
+Geolocation will be configurable in the future.
 
 We also plan to implement advanced Stealth mechanisms such as user gesture
 impersonation.
 
 ### Captcha solving
 
-Captcha solvers are currently in beta, please reach out to us to test it.
+Captcha solvers are currently in beta; please get in touch with us to test it.
 
 ## Limitations
 
 - We bundle proxies into the browser so you don't have to worry about it. This
   means that bringing your own proxy vendor is not supported at this time.
 - Additionally, some high-risk categories are restricted by our proxy vendors
-  and cannot be proxied, this includes:
+  and cannot be proxied; this includes:
   - All Apple domains, including iTunes and App stores
   - Entertainment (e.g., Netflix, Playstation)
   - Banking and other financial institutions

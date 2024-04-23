@@ -15,7 +15,7 @@ The Browser Sessions runs on with the following Chromium flags:
 - `--no-sandbox`
 - `--disable-blink-features=AutomationControlled`
 
-The viewport, user agents and header configuration is handled by the
+The viewport, user agents, and header configuration are handled by the
 [fingerprint mechanism](/features/stealth-mode).
 
 Downloads are enabled and stored by default,
@@ -24,13 +24,13 @@ Downloads are enabled and stored by default,
 ## Resources & Limits
 
 Browser Sessions runs on fast and dedicated instances with isolated resources
-(storage, network, memory and vCPUs).
+(storage, network, memory, and vCPUs).
 
 The following limits exist and are being worked on:
 
 - Only Chromium is available.
-- File uploads are untested, contact us in case of issues.
-- Browser instances currently run without GPUs, expect slower animations.
+- File uploads are untested; contact us if you have issues.
+- Browser instances currently run without GPUs; expect slower animations.
 
 ## Patterns
 
@@ -72,9 +72,9 @@ limited, but with Browserbase, it's easy.
 
 <Note>
 
-- You must upload a valid unpacked chrome extension, in a .zip file format
+- You must upload a valid unpacked Chrome Extension in a .zip file format
   containing a manifest.json at the root.
-- Starting a session with a chrome extension will increase session creation time
+- Starting a session with a Chrome Extension will increase session creation time
   slightly, as we have to load the extension and restart the browser.
 
 </Note>

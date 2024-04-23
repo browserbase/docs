@@ -5,7 +5,7 @@ description: "Each Browser run is a Session, controlled through our APIs."
 
 ## Overview
 
-A Session represents a single Browser run, from the connection of a Browser
+A Session represents a single Browser run from the connection of a Browser
 instance to its termination (closed, timeout, or disconnected).
 
 ### Starting a Session
@@ -14,8 +14,8 @@ A Session is either created on the fly, upon connection (via `connectOverCDP()`
 or `puppeteer.connect()`), or via the
 [Sessions API](/api-reference/list-all-sessions).
 
-Once created, it can only be started through a Driver (Playwright, Puppeteer, or
-Selenium), ready to receive actions to perform.
+Once created, a Session can be connected to through a Driver (Playwright, Puppeteer, or
+Selenium).
 
 <CodeGroup>
 
@@ -66,8 +66,7 @@ with sync_playwright() as playwright:
 </CodeGroup>
 
 <Note>
-  A Session created through the API needs to be started in the following 15min,
-  otherwise it will moved automatically to the `COMPLETED` state.
+  A Session created through the API must be connected in the first 15 minutes. Otherwise, it will move automatically to the `COMPLETED` state.
 </Note>
 
 ### Session's lifecycle
@@ -132,7 +131,7 @@ You can inspect a completed Session using the
 
 ## Limitations
 
-- Sessions have a default timeout of 30min. As customer, reach out to us on
+- Sessions have a default timeout of 30min. As a customer, reach out to us on
   Slack to increase this limit.
 - Disconnecting from your browser moves the session's state to `COMPLETED,`
   which cannot be reconnected.
@@ -162,7 +161,7 @@ Follow the steps to download files:
 
 1. Use the
    [Create Session API](https://www.notion.so/Getting-Started-Guide-132ce877353a4b4fa051fa1de5d7981b?pvs=21)
-   to create a new session. You'll need the session id for when you connect.
+   to create a new session. You'll need the session ID for when you connect.
 
 2. Finally, configure your library's downloads location:
 
@@ -322,7 +321,7 @@ account._
 
 <Info>
 
-We sync the files in real-time; the size of your downloads might affect their
+We sync the files in real time; the size of your downloads might affect their
 immediate availability through the `/downloads` endpoint. The above code
 provides a snippet to handle that use case.
 

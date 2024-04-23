@@ -3,8 +3,8 @@ title: "Quickstart"
 description: "Run your first Browser Session in under a minute"
 ---
 
-Let's run a first session from the Playground, inspect it with
-[Session Replay](/features/sessions), and finally start a session using your
+Let's run a first session from the Playground and inspect it with
+[Session Debugger](/features/sessions), and finally start a session using your
 code.
 
 ## Run your first Browser session in the Playground
@@ -30,13 +30,13 @@ automation scripts or data extraction snippets directly from your browser:
     Congrats, you've run your first Browser Session on Browserbase!
     Let's take a closer look at it.
 
-    The Session page offers you a full Session Replay with screen recording, network, and Chrome Console logs for each step:
+    The Session page offers you a full Session Debugger with screen recording, network, and Chrome Console logs for each step:
 
-    <Frame caption="Session Replay gives you full visibility on a Session's run.">
-      <img src="/images/quickstart/session-replay.png" />
+    <Frame caption="Session Debugger gives you full visibility on a Session's run.">
+      <img src="/images/quickstart/session-debugger.png" />
     </Frame>
 
-    Learn more on [Session Replay](/features/sessions) capabilities on the Sessions documentation.
+    Learn more on [Session Debugger](/features/sessions) capabilities on the Sessions documentation.
 
   </Step>
 </Steps>
@@ -67,7 +67,7 @@ Let's now move to integrate Browserbase with your code.
         `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`
       );
 
-      // It's important to get the default context to ensure the sessions are recorded.
+      //Getting the default context to ensure the sessions are recorded.
       const defaultContext = browser.contexts()[0];
       const page = defaultContext.pages()[0];
 
@@ -168,7 +168,7 @@ Let's now move to integrate Browserbase with your code.
       <img src="/images/quickstart/dashboard.png" />
     </Frame>
 
-    Select your Session to access its [Session Replay](/features/sessions) (showcased in the [previous section](#your-first-session)).
+    Select your Session to access its [Session Debugger](/features/sessions) (showcased in the [previous section](#your-first-session)).
 
   </Step>
 </Steps>
