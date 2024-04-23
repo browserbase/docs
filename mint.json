@@ -2,8 +2,8 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Browserbase Documentation",
   "logo": {
-    "dark": "/images/logo.png",
-    "light": "/images/logo.png"
+    "dark": "/logo/dark.png",
+    "light": "/logo/light.png"
   },
   "feedback": {
     "raiseIssue": true,
@@ -97,7 +97,7 @@
   "footerSocials": {
     "website": "https://www.browserbase.com",
     "x": "https://x.com/browserbasehq",
-    "github": "https://github.com/browserbasehq",
+    "github": "https://github.com/browserbase",
     "linkedin": "https://www.linkedin.com/company/browserbasehq"
   }
 }
