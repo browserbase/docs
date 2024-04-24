@@ -19,7 +19,7 @@ The viewport, user agents, and header configuration are handled by the
 [fingerprint mechanism](/features/stealth-mode).
 
 Downloads are enabled and stored by default,
-[accessible via the API](/features/sessions#downloading-files)
+[accessible via the API](/features/sessions#downloading-files).
 
 ## Resources & Limits
 
@@ -42,12 +42,25 @@ this is an experimental feature. We're still working on improving browser
 compatibility and reliability. For now, this page will only load on Chromium
 browsers.
 
-1. Use the Session API to [create a new session](/api-reference/create-a-session).
-2. Then, use the [Session API debug endpoint](/api-reference/retrieve-a-session-debug-connection-urls)
+1. Use the Session API to
+   [create a new session](/api-reference/create-a-session).
+2. Then, use the
+   [Session API debug endpoint](/api-reference/retrieve-a-session-debug-connection-urls)
    to get the `debuggerFullscreenUrl`.
-3. Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking action on the session.
+3. Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking
+   action on the session.
 
-The following sections provide use cases with ready to use snippets.
+The following sections provide use cases with ready-to-use snippets.
+
+<Card
+  title="Remote Control use cases"
+  icon="book"
+  iconType="light"
+  href="/guides/browser-remote-control"
+>
+  Explore how to navigate complex UIs and achieve 10x faster development
+  iterations.
+</Card>
 
 ### Loading a custom extension
 
@@ -104,3 +117,12 @@ import { chromium } from "playwright-core";
   await browser.close();
 })().catch((error) => console.error(error.message));
 ```
+
+<Card
+  title="Extensions API"
+  icon="puzzle"
+  iconType="light"
+  href="/api-reference/upload-an-extension"
+>
+  Explore how to upload a custom Extension
+</Card>

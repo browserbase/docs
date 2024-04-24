@@ -1,13 +1,16 @@
 ---
 title: "Deep dive: BrowserContexts and Pages"
 sidebarTitle: "BrowserContexts & Pages"
-description: "Key concepts not to be confused with and how to use them with Browserbase."
+description:
+  "Key concepts not to be confused with and how to use them with Browserbase."
 mode: "wide"
 ---
 
-Most drivers (Playwright, Puppeteer) expose an API through `Browser`, `BrowserContext`, and `Page` objects.
+Most drivers (Playwright, Puppeteer) expose an API through `Browser`,
+`BrowserContext`, and `Page` objects.
 
-The boundaries between them can be blurry. This guide teaches you to avoid common pitfalls and how each concept relates to Browserbase's architecture.
+The boundaries between them can be blurry. This guide teaches you to avoid
+common pitfalls and how each concept relates to Browserbase's architecture.
 
 ## What are BrowserContexts and Pages?
 
@@ -78,15 +81,14 @@ A typical Playwright or Puppeteer program looks as follows:
 
     </CodeGroup>
 
+Let's look at the `Browser`, `BrowserContext`, and `Page` definitions by
+comparing them to our day-to-day Browser:
 
-Let's look at the `Browser`, `BrowserContext`, and `Page` definitions by comparing them to our day-to-day Browser:
-
-| Concept                                               | Drive (Puppeteer/Playwright) | My Browser                                                |
-| ---------------------------------------------------- | --------------------- | ----------------------------------------------------------- |
-| `Browser`                                          | A Browser instance (_dedicated cache, sessions_)                    | The running Chrome application      |
-| `BrowserContext`                                          | A Browser Session (_dedicated cookies, shared cache_)                    | Browser Window or Chrome Profile or Incognito Window      |
-| `Page`                                          | A Browser tab (_dedicated history, shared cookies, and cache_)                    | Tabs      |
-
+| Concept          | Drive (Puppeteer/Playwright)                                   | My Browser                                           |
+| ---------------- | -------------------------------------------------------------- | ---------------------------------------------------- |
+| `Browser`        | A Browser instance (_dedicated cache, sessions_)               | The running Chrome application                       |
+| `BrowserContext` | A Browser Session (_dedicated cookies, shared cache_)          | Browser Window or Chrome Profile or Incognito Window |
+| `Page`           | A Browser tab (_dedicated history, shared cookies, and cache_) | Tabs                                                 |
 
 We can now visualize the relationship between them as follows:
 
@@ -150,21 +152,27 @@ flowchart
 
 ```
 
+`Browser`, `BrowserContext`, and `Page` are encapsulated concepts that enable
+developers to control different parts of the Browser.
 
-`Browser`, `BrowserContext`, and `Page` are encapsulated concepts that enable developers to control different parts of the Browser.
-
-Browserbase removes the complexity of dealing with multiple `BrowserContext` by offering on-the-fly browsers with a unique context in which to interact.
+Browserbase removes the complexity of dealing with multiple `BrowserContext` by
+offering on-the-fly browsers with a unique context in which to interact.
 
 ## How to use BrowserContexts and Pages with Browserbase
 
-Browserbase assigns each `Browser` to a [dedicated virtual machine](/under-the-hood) (with isolated resources -- unlike your local browser) with a unique `BrowserContext` leveraging the [Persistent Context API](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
+Browserbase assigns each `Browser` to a
+[dedicated virtual machine](/under-the-hood) (with isolated resources -- unlike
+your local browser) with a unique `BrowserContext` leveraging the
+[Persistent Context API](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
 
-The combination of isolated resources and a unique `BrowserContext` [enables the support for Chrome Extensions](/features/browsers#loading-a-custom-extension) and reliable performances.
-
+The combination of isolated resources and a unique `BrowserContext`
+[enables the support for Chrome Extensions](/features/browsers#loading-a-custom-extension)
+and reliable performances.
 
 In short, with Browserbase:
 
-> A Browser Session (`connectOverCDP()`) = Dedicated Browser + Unique BrowserContext
+> A Browser Session (`connectOverCDP()`) = Dedicated Browser + Unique
+> BrowserContext
 
 <br />
 
@@ -232,105 +240,107 @@ Here are some dos and don'ts to help get the best out of Browserbase:
         run(playwright)
     ```
     </CodeGroup>
+
 </Accordion>
 
 <Accordion title="Create multiple Browser instances for parallelization">
-  <Card title="Follow the complete guide on Parallelization" icon="book" iconType="light" href="/guides/parallelization">
+  <Card
+    title="Follow the complete guide on Parallelization"
+    icon="book"
+    iconType="light"
+    href="/guides/parallelization"
+  >
     See how to setup multiple Browser instances to speed up your Automation.
   </Card>
 </Accordion>
 
 </AccordionGroup>
 
-
 ### Don'ts
 
 <AccordionGroup>
 
-
 <Accordion title="Don't use multiple BrowserContexts or Pages to speed up your automation" defaultOpen>
   Using multiple contexts or pages breaks the Session recording and live debugger URLs. **Instead, [rely on multiple browser instances](/guides/parallelization)**.
 
-  ```javascript Playwright (JavaScript)
-  import { chromium } from "playwright-core";
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
 
-  (async () => {
-    const browser = await chromium.connectOverCDP(
-      `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
-    );
+(async () => {
+  const browser = await chromium.connectOverCDP(
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
+  );
 
-    const getContent = async (url) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
+  const getContent = async (url) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
 
-      try {
-        await page.goto(url, {
-          waitUntil: "domcontentloaded",
-        });
+    try {
+      await page.goto(url, {
+        waitUntil: "domcontentloaded",
+      });
 
-        return await page.content();
-      } finally {
-        await page.close();
+      return await page.content();
+    } finally {
+      await page.close();
+    }
+  };
+
+  await Promise.all(
+    ["https://www.google.com", "https://www.bing.com"].map(async (item) => {
+      const contents = [];
+
+      for (url in item.urls) {
+        contents.push(await getContent(url));
       }
-    };
 
-    await Promise.all(
-      ["https://www.google.com", "https://www.bing.com"].map(async (item) => {
-        const contents = [];
-
-        for (url in item.urls) {
-          contents.push(await getContent(url));
-        }
-
-        return contents;
-      }),
-    );
-    await browser.close();
-  })().catch((error) => console.error(error.message));
-  ```
-
+      return contents;
+    }),
+  );
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
 
 </Accordion>
 
 <Accordion title="Don't use multiple Pages to reuse cookies or localStorage across multiple scenarios">
 
-  Using multiple pages breaks the Session recording and live debugger URLs. **Instead, reuse the default context and page**.
+Using multiple pages breaks the Session recording and live debugger URLs.
+**Instead, reuse the default context and page**.
 
-  ```javascript Playwright (JavaScript)
-  import { chromium } from "playwright-core";
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
 
-  (async () => {
-    const browser = await chromium.connectOverCDP(
-      `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
-    );
+(async () => {
+  const browser = await chromium.connectOverCDP(
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
+  );
 
-    const context = await browser.contexts()[0];
-    
-    const page = await context.newPage();
+  const context = await browser.contexts()[0];
 
-    await page.goto('https://www.browserbase.com/sign-in', {
-      waitUntil: "domcontentloaded",
-    })
+  const page = await context.newPage();
 
-    await page.close()
+  await page.goto("https://www.browserbase.com/sign-in", {
+    waitUntil: "domcontentloaded",
+  });
 
-    // sign in ...
-    
-    const page = await context.newPage();
+  await page.close();
 
-    await page.goto('https://www.browserbase.com/playground', {
-      waitUntil: "domcontentloaded",
-    })
+  // sign in ...
 
-    // interact with a clean playground while authenticated
+  const page = await context.newPage();
 
-    await page.close();
-    await browser.close();
-  })().catch((error) => console.error(error.message));
-  ```
+  await page.goto("https://www.browserbase.com/playground", {
+    waitUntil: "domcontentloaded",
+  });
 
+  // interact with a clean playground while authenticated
+
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
 
 </Accordion>
-
 
 </AccordionGroup>

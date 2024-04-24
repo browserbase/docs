@@ -1,54 +1,69 @@
 ---
 title: "Taking a Session's Remote Control"
 sidebarTitle: "Session's Remote Control"
-description: "Navigate complex UIs and achieve 10x faster development iterations."
+description:
+  "Navigate complex UIs and achieve 10x faster development iterations."
 ---
 
+Browserbase offers the [Session Debugger](/features/session-debugger), a
+complete tool to inspect completed Sessions. However, many use cases require
+direct interaction with the running Session or can benefit from direct debugging
+from the local Browser.
 
-Browserbase offers the [Session Replay](/session-replay), a complete tool to inspect completed Sessions. However, many use cases require direct interaction with the running Session or can benefit from direct debugging from the [Browser](/browsers).
-
-This guide covers getting a `debuggerFullscreenUrl` to access a running Session to debug a local AI Agent iteration or handle complex UI scenarios such as dealing with iframes or user credentials.
-
+This guide covers getting a `debuggerFullscreenUrl` to access a running Session
+to debug a local AI Agent iteration or handle complex UI scenarios such as
+dealing with iframes or user credentials.
 
 ## Getting a Remote Access link
+
+Getting a Remote Access link is achieved by using the
+[Session Debug Connection URL endpoint](/api-reference/retrieve-a-session-debug-connection-urls):
 
 <Steps>
 
 <Step title="Start a Session">
-   Use the [Session API](/api-reference/create-a-session) to create a new
-   session ([_give it a try from the API Playground_](/api-reference/create-a-session)).
+  Use the [Session API](/api-reference/create-a-session) to create a new session
+  ([_give it a try from the API Playground_](/api-reference/create-a-session)).
 </Step>
 
 <Step title="Request a debug connection URL">
-   Then, use the [Session API debug endpoint](/api-reference/retrieve-a-session-debug-connection-urls)
-   to get the `debuggerFullscreenUrl`.
+  Then, use the [Session API debug
+  endpoint](/api-reference/retrieve-a-session-debug-connection-urls) to get the
+  `debuggerFullscreenUrl`.
 </Step>
 
 <Step title="Open the Session from your local Chrome browser">
-   Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking action on the session.
+  Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking action
+  on the session.
 </Step>
 
 </Steps>
 
 The following sections provide use cases with ready-to-use snippets.
 
-
 ## Unblock complex UI scenarios by giving control to the end-user
 
-While Browserbase helps dealing with common scraping problems ([anti-bot mechanism, captchas](/features/stealth-mode), [reliably download files](/features/sessions#downloading-files)),
-some scenarios remain hard to automate for technical or data privacy reasons.
+While Browserbase helps dealing with common scraping problems
+([anti-bot mechanism, captchas](/features/stealth-mode),
+[reliably download files](/features/sessions#downloading-files)), some scenarios
+remain hard to automate for technical or data privacy reasons.
 
-**Dealing with iframe** can be challenging as the loaded content might be external and could change without notice, adding another fold of scraping complexity.
-Interacting with iframes can be delegated to the end user by forwarding the remote control URL.
+**Dealing with iframe** can be challenging as the loaded content might be
+external and could change without notice, adding another fold of scraping
+complexity. Interacting with iframes can be delegated to the end user by
+forwarding the remote control URL.
 
-**Dealing with user credentials** is another complex scenario as the end-user might prefer to fill out its credentials directly on the website instead of storing them elsewhere.
+**Dealing with user credentials** is another complex scenario as the end-user
+might prefer to fill out its credentials directly on the website instead of
+storing them elsewhere.
 
 Let's take a look at the last scenario with an AI Agent for Amazon wishlists.
 
-
 ### Pause our automation while the user enters its credentials
 
-Our AI Agent tries to find the best prices for items on a user's Amazon wishlist; below is the `retrieveAmazonWishlistItems()` function responsible to gather the items:
+Our AI Agent tries to find the best prices for items on a user's Amazon
+wishlist; below is the `retrieveAmazonWishlistItems()` function responsible to
+gather the items:
 
 ```js
 async function retrieveDebugConnectionURL(sessionId) {
@@ -91,13 +106,14 @@ async function retrieveAmazonWishlistItems(sessionId, page) {
 }
 ```
 
-
-
 ## Accelerate your local development with remote debugging
 
-Developing scraping programs requires a lot of slow iterations, involving lots of `console.log()` and `page.on('pageerror', /* ... */`.
+Developing scraping programs requires a lot of slow iterations, involving lots
+of `console.log()` and `page.on('pageerror', /* ... */`.
 
-Fortunately, you can develop new automation or AI Agent 10x faster by combining the live debugging of Sessions and [Session Replay](/features/session-replay):
+Fortunately, you can develop new automation or AI Agent 10x faster by combining
+the live debugging of Sessions and
+[Session Debugger](/features/session-debugger):
 
 ```mermaid
   flowchart LR
@@ -107,7 +123,7 @@ Fortunately, you can develop new automation or AI Agent 10x faster by combining 
    stuck["A selector mismatches"]
    debug["Live inspect and debug the Session"]
    failed["An error occurred and the Session closed"]
-   replay["Inspect on Session Replay"]
+   replay["Inspect on Session Debugger"]
    worksout["The automation works as intented"]
 
    run-->error
@@ -154,7 +170,7 @@ async function retrieveDebugConnectionURL(sessionId) {
       headers: {
         Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`,
       },
-    }
+    },
   );
   const json = await response.json();
   return json.debuggerFullscreenUrl;
@@ -165,7 +181,7 @@ async function retrieveDebugConnectionURL(sessionId) {
   sessionId = id;
   const browser = await chromium.connectOverCDP(
     // we connect to a Session created via the API
-    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`,
   );
   const defaultContext = browser.contexts()[0];
   const page = defaultContext.pages()[0];
@@ -175,14 +191,14 @@ async function retrieveDebugConnectionURL(sessionId) {
     waitUntil: "domcontentloaded",
   });
 
-  const debugUrl = await retrieveDebugConnectionURL(sessionId)
-  console.log(`Session started, live debug accessible here: ${debugUrl}.`)
+  const debugUrl = await retrieveDebugConnectionURL(sessionId);
+  console.log(`Session started, live debug accessible here: ${debugUrl}.`);
 
   await page.close();
   await browser.close();
 })().catch((error) => {
   console.log(
-    `Session failed, replay is accessible here: https://www.browserbase.com/sessions/${sessionId}.`
+    `Session failed, replay is accessible here: https://www.browserbase.com/sessions/${sessionId}.`,
   );
   console.error(error.message);
 });
@@ -193,15 +209,17 @@ Let's review the key snippets used:
 <Steps>
 
 <Step title="The createSession() and retrieveDebugConnectionURL() helper">
-   Keep these two helpers close by mutualizing them into an `utils.js` file.
+  Keep these two helpers close by mutualizing them into an `utils.js` file.
 </Step>
 
 <Step title="Printing the debug connection URL as soon as the Session is ready">
-   Retrieve and print the debug connection URL as soon as the Session starts, making it accessible in case of a stuck Session or unexpected errors.
+  Retrieve and print the debug connection URL as soon as the Session starts,
+  making it accessible in case of a stuck Session or unexpected errors.
 </Step>
 
-<Step title="Print out the Session Replay link in case of failure">
-   Finally, we close the loop of productivity by printing the direct link to the [Session Replay](/features/session-replay) in case of a Session crash.
+<Step title="Print out the Session Debugger link in case of failure">
+  Finally, we close the loop of productivity by printing the direct link to the
+  [Session Debugger](/features/session-debugger) in case of a Session crash.
 </Step>
 
 </Steps>

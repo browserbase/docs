@@ -3,9 +3,8 @@ title: "Quickstart"
 description: "Run your first Browser Session in under a minute"
 ---
 
-Let's run a first session from the Playground and inspect it with
-[Session Debugger](/features/sessions), and finally start a session using your
-code.
+Let's run a first session from the Playground and inspect it with the
+[Session Debugger](/features/sessions), and finally start a session from code.
 
 ## Run your first Browser session in the Playground
 
@@ -18,7 +17,7 @@ automation scripts or data extraction snippets directly from your browser:
 
 <br />
 
-### Your first Session
+### Run your first Session
 
 <Steps>
   <Step title="Go to the Playground">
@@ -53,8 +52,10 @@ Let's now move to integrate Browserbase with your code.
       <img src="/images/quickstart/api-key.png" />
     </Frame>
 
+    <Note>Update your `.env` by adding the `BROWSERBASE_API_KEY` entry or remember to prefix your bash command when running your code with `BROWSERBASE_API_KEY=xxx node my-script.js`.</Note>
+
   </Step>
-  <Step title="Update and your code">
+  <Step title="Update your code">
     Running your existing code with Browserbase only requires a few line changes:
 
     <CodeGroup>
@@ -158,8 +159,6 @@ Let's now move to integrate Browserbase with your code.
 
     </CodeGroup>
 
-    <Note>Update your `.env` by adding the `BROWSERBASE_API_KEY` entry or remember to prefix your bash command when running your code with `BROWSERBASE_API_KEY=xxx node my-script.js`.</Note>
-
   </Step>
   <Step title="Inspect the completed Session">
     You can find all the recent sessions on the Dashboard's Overview, along with essential metrics:
@@ -168,7 +167,7 @@ Let's now move to integrate Browserbase with your code.
       <img src="/images/quickstart/dashboard.png" />
     </Frame>
 
-    Select your Session to access its [Session Debugger](/features/sessions) (showcased in the [previous section](#your-first-session)).
+    Select your Session to inspect it with the [Session Debugger](/features/sessions) (showcased in the [previous section](#run-your-first-session)).
 
   </Step>
 </Steps>
@@ -177,16 +176,6 @@ Let's now move to integrate Browserbase with your code.
 
 <CardGroup cols={2}>
 
-{" "}
-
-<Card
-  title="Browserbase Dashboard"
-  icon="book"
-  iconType="light"
-  href="/features/dashboard"
->
-  Explore all Browserbase capabilities, starting with the Dashboard
-</Card>
 <Card
   title="Sessions API"
   icon="server"
@@ -194,6 +183,14 @@ Let's now move to integrate Browserbase with your code.
   href="/under-the-hood"
 >
   Get full control of the Browser's Sessions with the Sessions REST API.
+</Card>
+<Card
+  title="BrowserContext and Pages"
+  icon="book"
+  iconType="light"
+  href="/guides/browser-contexts-and-pages"
+>
+  See how Browserbase simplifies the management of contexts and pages
 </Card>
 
 </CardGroup>

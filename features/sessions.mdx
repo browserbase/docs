@@ -1,6 +1,7 @@
 ---
 title: Sessions
 description: "Each Browser run is a Session, controlled through our APIs."
+mode: "wide"
 ---
 
 ## Overview
@@ -14,8 +15,8 @@ A Session is either created on the fly, upon connection (via `connectOverCDP()`
 or `puppeteer.connect()`), or via the
 [Sessions API](/api-reference/create-a-session).
 
-Once created, a Session can be connected to through a Driver (Playwright, Puppeteer, or
-Selenium).
+Once created, a Session can be connected to through a Driver (Playwright,
+Puppeteer, or Selenium) or via [Remote Control](/guides/browser-remote-control).
 
 <CodeGroup>
 
@@ -66,7 +67,8 @@ with sync_playwright() as playwright:
 </CodeGroup>
 
 <Note>
-  A Session created through the API must be connected in the first 15 minutes. Otherwise, it will move automatically to the `COMPLETED` state.
+  A Session created through the API must be connected in the first 15 minutes.
+  Otherwise, it will move automatically to the `COMPLETED` state.
 </Note>
 
 ### Session's lifecycle
@@ -118,23 +120,24 @@ stateDiagram-v2
 ### Inspecting a Session
 
 You can inspect a completed Session using the
-[Session API](/api-reference/retrieve-a-session) or the Dashboard:
+[Session API](/api-reference/retrieve-a-session) or the
+[Session Debugger](/features/session-debugger):
 
-| Action                                               | Browserbase Dashboard | Sessions API                                                |
-| ---------------------------------------------------- | --------------------- | ----------------------------------------------------------- |
-| Access logs                                          | ✅                    | [`GET /v1/sessions/[sessionid]/logs`](/api-reference/)      |
-| Access ChromeDevTools data (ex: network, DOM events) | ✅                    | ❌                                                          |
-| Access recording                                     | ✅                    | [`GET /v1/sessions/[sessionid]/recording`](/api-reference/) |
-| Retrieve downloaded files                            | ❌                    | [`GET /v1/sessions/[sessionid]/downloads`](/api-reference/) |
-| Access debug connection info                         | ❌                    | [`GET /v1/sessions/[sessionid]/debug`](/api-reference/)     |
-| Access memory and CPUs usage                         | ✅                    | ❌                                                          |
+| Action                                               | Session Debugger | Sessions API                                                |
+| ---------------------------------------------------- | ---------------- | ----------------------------------------------------------- |
+| Access logs                                          | ✅               | [`GET /v1/sessions/[sessionid]/logs`](/api-reference/)      |
+| Access ChromeDevTools data (ex: network, DOM events) | ✅               | ❌                                                          |
+| Access recording                                     | ✅               | [`GET /v1/sessions/[sessionid]/recording`](/api-reference/) |
+| Retrieve downloaded files                            | ❌               | [`GET /v1/sessions/[sessionid]/downloads`](/api-reference/) |
+| Access debug connection info                         | ❌               | [`GET /v1/sessions/[sessionid]/debug`](/api-reference/)     |
+| Access memory and CPUs usage                         | ✅               | ❌                                                          |
 
 ## Limitations
 
 - Sessions have a default timeout of 30min. As a customer, reach out to us on
   Slack to increase this limit.
-- Disconnecting from your browser moves the session's state to `COMPLETED,`
-  which cannot be reconnected.
+- Disconnecting from a browser moves the session's state to `COMPLETED`, which
+  cannot be reconnected.
 
 ## Patterns
 
@@ -321,8 +324,17 @@ account._
 
 <Info>
 
-We sync the files in real time; the size of your downloads might affect their
+We sync the files in real-time; the size of your downloads might affect their
 immediate availability through the `/downloads` endpoint. The above code
 provides a snippet to handle that use case.
 
 </Info>
+
+<Card
+  title="Session downloads API"
+  icon="server"
+  iconType="light"
+  href="/api-reference/retrieve-a-session-downloads"
+>
+  Learn more on the available params and response fields
+</Card>

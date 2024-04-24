@@ -5,8 +5,8 @@ mode: "wide"
 ---
 
 The Browserbase Platform is the solution to all the reliability, scalability,
-and fingerprinting challenges that working with headless browsers brings. Let's
-take a closer look at it:
+and anti-bot challenges that working with headless browsers brings. Let's take a
+closer look at it:
 
 ```mermaid
   flowchart
@@ -16,7 +16,7 @@ take a closer look at it:
     subgraph A ["Browserbase"]
         style A padding-top:100px;
 
-        dash[Playground]
+        dash["Dashboard (Playground)"]
         dash-->lb
         lb[Load Balancer + Auth]
         webhooks[Webhooks Service]
@@ -54,8 +54,9 @@ reliable and up-to-date proxy and captcha solver providers._
 The Dashboard is a collaborative place to access real-time information from all
 [Sessions](/features/sessions) and essential metrics.
 
-[Session Debugger](/features/session-debugger) is a central feature, providing
-video replay, logs, and other Chrome Devtools data for a specific Session.
+The [Session Debugger](/features/session-debugger) is a central feature,
+providing video replay, logs, and other Chrome Devtools data for a specific
+Session.
 
 <Frame caption="Session Debugger gives you full visibility on a Session's run.">
   <img src="/images/quickstart/session-debugger.png" />

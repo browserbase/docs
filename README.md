@@ -1,9 +1,9 @@
 # Browserbase Documentation
 
-<p align="center">
+<p align="center" style="max-width: 400px; margin: 0 auto;">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="images/logo.png"/>
-        <img alt="Defer logo" src="images/logo.png"/>
+        <source media="(prefers-color-scheme: dark)" srcset="logo/dark.png"/>
+        <img alt="Defer logo" src="logo/light.png"/>
     </picture>
 </p>
 
