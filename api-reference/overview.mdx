@@ -22,7 +22,7 @@ const response = await fetch(
   {
     method: "GET",
     headers: {
-      Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`,
+      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
     },
   },
 );

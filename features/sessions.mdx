@@ -188,7 +188,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
                 `https://www.browserbase.com/v1/sessions/${sessionId}/downloads`, {
                   method: 'GET',
                   headers: {
-                    Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`
+                    'x-bb-api-key': process.env.BROWSERBASE_API_KEY!
                   }
               });
               const arrayBuffer = await response.arrayBuffer()
@@ -255,39 +255,40 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
 import puppeteer from "puppeteer-core"
 import { writeFileSync } from "node:fs"
 
-async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
-    return new Promise((resolve, reject) => {
-        let pooler;
-        const timeout = setTimeout(() => {
-            if (pooler) {
-              clearInterval(pooler)
-            }
-        }, retryForSeconds);
-        function fetchDownloads() {
-            try {
-              const response = await fetch(
-                `https://www.browserbase.com/v1/sessions/${sessionId}/downloads`, {
-                  method: 'GET',
-                  headers: {
-                    Authorization: `x-bb-api-key: ${process.env.BROWSERBASE_API_KEY}`
-                  }
-              });
-              const arrayBuffer = await response.arrayBuffer()
-              if (arrayBuffer.bytesLength > 0) {
-                const buffer = Buffer.from(arrayBuffer)
-                writeFileSync('downloads.zip', buffer)
-                clearInterval(pooler)
-                clearTimeout(timeout)
-                resolve()
-              }
-            } catch (e) {
+async function saveDownloadsOnDisk(sessionId, retryForSeconds) {
+  return new Promise((resolve, reject) => {
+      let pooler;
+      const timeout = setTimeout(() => {
+          if (pooler) {
+            clearInterval(pooler)
+          }
+      }, retryForSeconds);
+      async function fetchDownloads() {
+          try {
+            const response = await fetch(
+              `https://www.browserbase.com/v1/sessions/${sessionId}/downloads`, {
+                method: 'GET',
+                headers: {
+                  'x-bb-api-key': process.env.BROWSERBASE_API_KEY!
+                }
+            });
+            const arrayBuffer = await response.arrayBuffer()
+            console.log('DOWNLOAD!', arrayBuffer.byteLength)
+            if (arrayBuffer.byteLength > 0) {
+              const buffer = Buffer.from(arrayBuffer)
+              writeFileSync('downloads.zip', buffer)
               clearInterval(pooler)
               clearTimeout(timeout)
-              reject(e)
+              resolve(null)
             }
-        }
-        pooler = setInterval(fetchDownloads, 2000)
-    })
+          } catch (e) {
+            clearInterval(pooler)
+            clearTimeout(timeout)
+            reject(e)
+          }
+      }
+      pooler = setInterval(fetchDownloads, 2000)
+  })
 }
 
 (async () => {
@@ -324,7 +325,7 @@ account._
 
 <Info>
 
-We sync the files in real-time; the size of your downloads might affect their
+We sync the files in real time; the size of your downloads might affect their
 immediate availability through the `/downloads` endpoint. The above code
 provides a snippet to handle that use case.
 
