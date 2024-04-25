@@ -97,7 +97,8 @@
       "group": "Guides",
       "pages": [
         "guides/browser-remote-control",
-        "guides/browser-contexts-and-pages"
+        "guides/browser-contexts-and-pages",
+        "guides/parallelization"
       ]
     }
   ],
