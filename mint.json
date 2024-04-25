@@ -53,7 +53,7 @@
     },
     {
       "group": "Features",
-      "pages": ["features/browsers", "features/sessions", "features/session-debugger", "features/stealth-mode"]
+      "pages": ["features/browsers", "features/sessions", "features/session-debugger", "features/stealth-mode", "features/screenshots-and-downloads"]
     },
     {
       "group": "Integrations",
