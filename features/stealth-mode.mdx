@@ -1,6 +1,7 @@
 ---
 title: Stealth Mode
 description: "Proxies, Captcha solving, and bot avoidance."
+mode: "wide"
 ---
 
 Browserbase's [custom-built Chromium Browser](/features/browsers) comes with a
@@ -15,63 +16,116 @@ enabled as follows with the `enableProxy=true` param:
 
 <CodeGroup>
 
-    ```javascript Playwright (JavaScript)
-    import { chromium } from "playwright-core";
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
 
-    (async () => {
-      const browser = await chromium.connectOverCDP(
-        `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`
-      );
+(async () => {
+  const browser = await chromium.connectOverCDP(
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  );
 
-      // Getting the default context to ensure the sessions are recorded.
-      const defaultContext = browser.contexts()[0];
-      const page = defaultContext.pages()[0];
+  // Getting the default context to ensure the sessions are recorded.
+  const defaultContext = browser.contexts()[0];
+  const page = defaultContext.pages()[0];
 
-      await page.goto("https://browserbase.com/");
-      await page.close();
-      await browser.close();
-    })().catch((error) => console.error(error.message));
-    ```
+  await page.goto("https://browserbase.com/");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
 
-    ```javascript Puppeteer (JavaScript)
-    import puppeteer from "puppeteer-core";
+```javascript Puppeteer (JavaScript)
+import puppeteer from "puppeteer-core";
 
-    (async () => {
-      const browser = await puppeteer.connect({
-        browserWSEndpoint:
-        `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`
-      });
+(async () => {
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  });
 
-      const page = await browser.newPage();
+  const page = await browser.newPage();
 
-      await page.goto("https://www.browserbase.com");
-      await page.close();
-      await browser.close();
-    })().catch((error) => console.error(error.message));
-    ```
+  await page.goto("https://www.browserbase.com");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
 
-    ```python Python
-    from playwright.sync_api import sync_playwright, Playwright
+```python Python
+from playwright.sync_api import sync_playwright, Playwright
 
-    def run(playwright: Playwright):
-        chromium = playwright.chromium
-        browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true')
-        context = browser.contexts[0]
-        page = context.pages[0]
+def run(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true')
+    context = browser.contexts[0]
+    page = context.pages[0]
 
-    with sync_playwright() as playwright:
-        run(playwright)
-    ```
+with sync_playwright() as playwright:
+    run(playwright)
+```
 
-    </CodeGroup>
+</CodeGroup>
 
 ### Fingerprinting
 
-The fingerprint mechanism handles the viewport, user agents, and headers.
-Geolocation will be configurable in the future.
+The fingerprint mechanism handles the viewport, user agents, and headers and can
+be configured when creating a new Session through the API with the `fingerprint`
+field:
 
-We also plan to implement advanced Stealth mechanisms such as user gesture
-impersonation.
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
+
+async function createSession() {
+  const response = await fetch(`https://www.browserbase.com/v1/sessions`, {
+    method: "POST",
+    headers: {
+      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      projectId: process.env.BROWSERBASE_PROJECT_ID,
+      fingerprint: {
+        locales: ["en", "en-US", "de"],
+        operatingSystems: ["android"],
+      },
+    }),
+  });
+  const json = await response.json();
+  return json;
+}
+
+(async () => {
+  const { id } = await createSession();
+  const browser = await chromium.connectOverCDP(
+    // we connect to a Session created via the API
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`,
+  );
+  const defaultContext = browser.contexts()[0];
+  const page = defaultContext.pages()[0];
+
+  await page.goto("https://www.browserbase.com");
+
+  await page.close();
+  await browser.close();
+})().catch(console.error);
+```
+
+The `fingerprint` field is an object with the following properties:
+
+| Property name                   | Type       | Available values                                                                   | Example                                            |
+| ------------------------------- | ---------- | ---------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `browserListQuery` (_optional_) | `string`   | [Docs](https://github.com/browserslist/browserslist#full-list)                     | `"> 0.5%, last 2 versions, Firefox ESR, not dead"` |
+| `browsers` (_optional_)         | `string[]` | `"chrome"`, `"edge"`, `"firefox"`, `"safari"`                                      | `["chrome", "firefox"]`                            |
+| `devices` (_optional_)          | `string[]` | `"desktop"`, `"mobile"`                                                            | `["mobile"]`                                       |
+| `httpVersion` (_optional_)      | `number`   | `1`, `2`                                                                           | `1`                                                |
+| `locales` (_optional_)          | `string[]` | [Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)  | `["en-US", "es"]`                                  |
+| `operatingSystems` (_optional_) | `string[]` | `"android"`,`"ios"`,`"linux"`,`"macos"`,`"windows"`                                | `["android", "ios"]`                               |
+| `screen` (_optional_)           | `object`   | `{ maxHeight?: number; maxWidth?: number; minHeight?: number; minWidth?: number }` | `{ maxHeight: 500; maxWidth: 1024; }`              |
+
+<Note>
+  - `browserListQuery` takes precedence on `browsers` - `operatingSystems` set
+  to `ios` or `android` requires `devices` to include `"mobile"` - `locales`
+  accepts 10 values maximum
+</Note>
 
 ### Captcha solving
 
