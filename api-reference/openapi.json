@@ -286,7 +286,7 @@
     },
     "/v1/sessions/{session-id}/debug": {
       "get": {
-        "summary": "Retrieve a Session debug connection URLs",
+        "summary": "Retrieve a Session Debug Connection URLs",
         "description": "Get remote access to a Session",
         "parameters": [
           {

@@ -1,49 +1,19 @@
 ---
 title: "Taking a Session's Remote Control"
-sidebarTitle: "Session's Remote Control"
+sidebarTitle: "Remotely control a Session"
 description:
   "Navigate complex UIs and achieve 10x faster development iterations."
 ---
 
-Browserbase offers the [Session Debugger](/features/session-debugger), a
-complete tool to inspect completed Sessions. However, many use cases require
-direct interaction with the running Session or can benefit from direct debugging
-from the local Browser.
 
 This guide covers getting a `debuggerFullscreenUrl` to access a running Session
 to debug a local AI Agent iteration or handle complex UI scenarios such as
 dealing with iframes or user credentials.
 
-## Getting a Remote Access link
-
-Getting a Remote Access link is achieved by using the
-[Session Debug Connection URL endpoint](/api-reference/retrieve-a-session-debug-connection-urls):
-
-<Steps>
-
-<Step title="Start a Session">
-  Use the [Session API](/api-reference/create-a-session) to create a new session
-  ([_give it a try from the API Playground_](/api-reference/create-a-session)).
-</Step>
-
-<Step title="Request a debug connection URL">
-  Then, use the [Session API debug
-  endpoint](/api-reference/retrieve-a-session-debug-connection-urls) to get the
-  `debuggerFullscreenUrl`.
-</Step>
-
-<Step title="Open the Session from your local Chrome browser">
-  Finally, open the `debuggerFullscreenUrl` URL in Chrome to start taking action
-  on the session.
-</Step>
-
-</Steps>
-
-The following sections provide use cases with ready-to-use snippets.
 
 ## Unblock complex UI scenarios by giving control to the end-user
 
-While Browserbase helps dealing with common scraping problems
+While Browserbase helps deal with common scraping problems
 ([anti-bot mechanism, captchas](/features/stealth-mode),
 [reliably download files](/features/sessions#downloading-files)), some scenarios
 remain hard to automate for technical or data privacy reasons.
@@ -57,7 +27,7 @@ forwarding the remote control URL.
 might prefer to fill out its credentials directly on the website instead of
 storing them elsewhere.
 
-Let's take a look at the last scenario with an AI Agent for Amazon wishlists.
+Let's look at the last scenario with an AI Agent for Amazon wishlists.
 
 ### Pause our automation while the user enters its credentials
 

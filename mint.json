@@ -96,7 +96,14 @@
     {
       "group": "Guides",
       "pages": [
-        "guides/browser-remote-control",
+        {
+          "group":  "Session Debug Connection",
+          "pages": [
+            "guides/session-debug-connection/overview",
+            "guides/session-debug-connection/browser-remote-control",
+            "guides/session-debug-connection/integrate-live-session"
+          ]
+        },
         "guides/browser-contexts-and-pages",
         "guides/parallelization"
       ]
