@@ -1,0 +1,94 @@
+---
+title: "How to deal with authentication flows"
+sidebarTitle: "Authentication flows"
+description: "Tactics to overcome 2FA and other authentication flows."
+---
+
+Authentication flows, along with an anti-bot mechanism, add complexity to
+automation. Two-factor authentication and captchas are challenging to overcome,
+and regular authentication flows slow down automation.
+
+Fortunately, Browserbase [Stealth Mode](/features/stealth-mode), along with some
+tactics, helps to go over authentication flows without interruption and to reuse
+sessions for faster automation.
+
+## Accessing an authentication flow with Stealth Mode
+
+Most authentication flows implement mechanisms to prevent automation and
+scraping:
+
+- IP addresses restrictions
+- User Agent filtering
+- Captchas (ex:
+  [Clerk now features a Captcha on all authentication flows](https://clerk.com/changelog/2024-04-19-visual-captcha))
+- Rate limiting
+
+When running your own Browser, dealing with the above requires setup IP
+rotations with Proxies along with Captcha solving and fingerprinting code or
+libraries.
+
+By connecting your automation to Browserbase, you get opt-in
+[Proxies](/features/stealth-mode), automatic fingerprinting, and Captcha solving
+without any code change:
+
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
+
+(async () => {
+  const browser = await chromium.connectOverCDP(
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  );
+
+  // Getting the default context to ensure the sessions are recorded.
+  const defaultContext = browser.contexts()[0];
+  const page = defaultContext.pages()[0];
+
+  await page.goto("https://browserbase.com/sign-in");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
+
+## Dealing with OAuth and Session-based authentication flows
+
+Some services rely on OAuth authentication (tokens) or Sessions (cookies).
+
+The cookies used as part of those authentication flows are set by external
+services (with `CORS` or `SameSite` attribute restrictions), making them
+inaccessible with the Puppeteer or Playwright APIs.
+
+A good practice to handle such advanced authentication flows is to create a
+custom Chrome Extension responsible for intercepting and storing cookies or
+tokens.
+
+## Dealing with two-factor authentication
+
+Two-step verification (via authenticator apps or SMS) or magic links require
+human intervention in the loop. Here are some tactics to cope with 2FA:
+
+### Disable 2FA or create an app password
+
+<Note>
+  This approach only applies to authentication flows owned by your team or
+  company.
+</Note>
+
+For an internal tool, try to turn off the
+[two-step verification](https://support.google.com/accounts/answer/1064203?hl=en&co=GENIE.Platform%3DDesktop).
+
+For an authentication flow requiring some level of security,
+[try to create an app password](https://support.google.com/accounts/answer/185833?hl=en).
+
+### Enable Remote Control of your Session
+
+If the two-step verification mechanism cannot be bypassed, you should consider
+handing back the control to the end user by leveraging the Session Connection
+Debug URLs.
+
+<Card
+  title="Taking a Session's Remote Control with Session Connection Debug URLs"
+  href="guides/session-debug-connection/overview"
+>
+  Let your end users complete the two-step verification process as part of your
+  automation.
+</Card>

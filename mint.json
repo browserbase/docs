@@ -105,7 +105,8 @@
           ]
         },
         "guides/browser-contexts-and-pages",
-        "guides/parallelization"
+        "guides/parallelization",
+        "guides/authentication"
       ]
     }
   ],
