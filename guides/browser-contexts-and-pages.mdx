@@ -263,6 +263,8 @@ Here are some dos and don'ts to help get the best out of Browserbase:
 <Accordion title="Don't use multiple BrowserContexts or Pages to speed up your automation" defaultOpen>
   Using multiple contexts or pages breaks the Session recording and live debugger URLs. **Instead, [rely on multiple browser instances](/guides/parallelization)**.
 
+<CodeGroup>
+
 ```javascript Playwright (JavaScript)
 import { chromium } from "playwright-core";
 
@@ -301,46 +303,87 @@ import { chromium } from "playwright-core";
 })().catch((error) => console.error(error.message));
 ```
 
+```javascript Puppeteer (JavaScript)
+import puppeteer from "puppeteer";
+
+(async () => {
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
+  });
+
+  const getContent = async (url) => {
+    const page = await browser.newPage();
+
+    try {
+      await page.goto(url, {
+        waitUntil: "domcontentloaded",
+      });
+
+      return await page.content();
+    } finally {
+      await page.close();
+    }
+  };
+
+  await Promise.all(
+    ["https://www.google.com", "https://www.bing.com"].map(async (url) => {
+      const contents = await getContent(url);
+      return contents;
+    }),
+  );
+  await browser.disconnect();
+})().catch((error) => console.error(error.message));
+```
+
+```python
+from playwright.sync_api import sync_playwright
+
+async def main():
+    async with sync_playwright() as p:
+        browser = await p.chromium.connect_over_cdp(
+            f'wss://connect.browserbase.com?apiKey={os.environ["BROWSERBASE_API_KEY"]}'
+        )
+
+        async def get_content(url):
+            context = await browser.new_context()
+            page = await context.new_page()
+
+            try:
+                await page.goto(url, wait_until="domcontentloaded")
+                return await page.content()
+            finally:
+                await page.close()
+
+        urls = ["https://www.google.com", "https://www.bing.com"]
+        contents = await asyncio.gather(*(get_content(url) for url in urls))
+        print(contents)
+
+        await browser.close()
+
+if __name__ == "__main__":
+    import os
+    import asyncio
+
+    asyncio.run(main())
+```
+
+</CodeGroup>
+
 </Accordion>
 
 <Accordion title="Don't use multiple Pages to reuse cookies or localStorage across multiple scenarios">
 
 Using multiple pages breaks the Session recording and live debugger URLs.
-**Instead, reuse the default context and page**.
+**Instead, persist the session and reuse the default context and page**.
 
-```javascript Playwright (JavaScript)
-import { chromium } from "playwright-core";
-
-(async () => {
-  const browser = await chromium.connectOverCDP(
-    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
-  );
-
-  const context = await browser.contexts()[0];
-
-  const page = await context.newPage();
-
-  await page.goto("https://www.browserbase.com/sign-in", {
-    waitUntil: "domcontentloaded",
-  });
-
-  await page.close();
-
-  // sign in ...
-
-  const page = await context.newPage();
-
-  await page.goto("https://www.browserbase.com/playground", {
-    waitUntil: "domcontentloaded",
-  });
-
-  // interact with a clean playground while authenticated
-
-  await page.close();
-  await browser.close();
-})().catch((error) => console.error(error.message));
-```
-
+  <Card
+      title="Follow the complete guide on Authentication"
+      icon="book"
+      iconType="light"
+      href="/guides/authentication#dealing-with-oauth-and-session-based-authentication-flows"
+    >
+    See how to reuse user sessions across multiple Browser Sessions.
+  </Card>
 </Accordion>
 
 </AccordionGroup>

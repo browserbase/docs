@@ -6,7 +6,7 @@ description: ""
 
 
 Browserbase provides a `BrowserbaseLoader` to enrich Langchain workflows with:
-- Extraction of text or raw HTML including from web pages using JavaScript or dynamically rendered text.
+- Extraction of text or raw HTML including from web pages, using JavaScript or dynamically rendered text.
 - Image loading via screenshots.
 
 ## Get started
@@ -60,13 +60,27 @@ Browserbase provides a `BrowserbaseLoader` to enrich Langchain workflows with:
 
     ```python
     from browserbase import Browserbase
-    from base64 import b64encode
+    from browserbase.helpers.gpt4 import GPT4VImage, GPT4VImageDetail
+    from langchain_core.messages import HumanMessage
+    from langchain_openai import ChatOpenAI
 
+    chat = ChatOpenAI(model="gpt-4-vision-preview", max_tokens=256)
     browser = Browserbase()
+
     screenshot = browser.screenshot("https://browserbase.com")
 
-    # Optional. Convert to base64
-    img_encoded = b64encode(screenshot).decode()
+    result = chat.invoke(
+        [
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": "What color is the logo?"},
+                    GPT4VImage(screenshot, GPT4VImageDetail.auto),
+                ]
+            )
+        ]
+    )
+
+    print(result.content)
     ```
 
     <Note>

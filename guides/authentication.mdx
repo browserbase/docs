@@ -31,6 +31,8 @@ By connecting your automation to Browserbase, you get opt-in
 [Proxies](/features/stealth-mode), automatic fingerprinting, and Captcha solving
 without any code change:
 
+<CodeGroup>
+
 ```javascript Playwright (JavaScript)
 import { chromium } from "playwright-core";
 
@@ -48,6 +50,46 @@ import { chromium } from "playwright-core";
   await browser.close();
 })().catch((error) => console.error(error.message));
 ```
+
+```javascript Puppeteer (JavaScript)
+const puppeteer = require("puppeteer");
+
+(async () => {
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  });
+
+  const pages = await browser.pages();
+  const page = pages[0];
+
+  await page.goto("https://browserbase.com/sign-in");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
+
+```python Python
+from playwright.sync_api import sync_playwright
+
+def main():
+    with sync_playwright() as p:
+        browser = p.chromium.connect_over_cdp(
+            f'wss://connect.browserbase.com?apiKey={os.environ["BROWSERBASE_API_KEY"]}&enableProxy=true'
+        )
+
+        # Getting the default context to ensure the sessions are recorded.
+        default_context = browser.contexts()[0]
+        page = default_context.pages()[0]
+
+        page.goto("https://browserbase.com/sign-in")
+        page.close()
+        browser.close()
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
 
 ## Dealing with OAuth and Session-based authentication flows
 

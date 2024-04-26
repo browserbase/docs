@@ -17,6 +17,8 @@ Driver with the following configuration:
 
 A Screenshot taken with Browserbase can be saved locally as a file:
 
+<CodeGroup>
+
 ```js Playwright
 import { writeFileSync } from "fs";
 import { chromium } from "playwright-core";
@@ -47,6 +49,61 @@ import { chromium } from "playwright-core";
     console.error(error)
 }
 ```
+
+```js Puppeteer (JavaScript)
+const puppeteer = require("puppeteer");
+const fs = require("fs");
+
+(async () => {
+  console.log("Starting remote browser...");
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${sessionId}`,
+  });
+  const pages = await browser.pages();
+  const page = pages[0];
+
+  await page.goto("https://www.browserbase.com", {
+    waitUntil: "domcontentloaded",
+  });
+
+  console.log("Taking a screenshot!");
+
+  const screenshot = await page.screenshot({ fullPage: true });
+  fs.writeFileSync("screenshot.jpeg", screenshot);
+
+  console.log("Shutting down...");
+  await browser.close();
+})().catch((error) => {
+  console.error(error);
+});
+```
+
+```python Python
+from playwright import async_playwright
+import os
+
+async def main():
+    print("Starting remote browser...")
+    async with async_playwright() as p:
+        browser = await p.chromium.connect_over_cdp(
+            f"wss://connect.browserbase.com?apiKey={os.environ['BROWSERBASE_API_KEY']}&sessionId={sessionId}"
+        )
+        context = await browser.new_context()
+        page = await context.new_page()
+
+        await page.goto("https://www.browserbase.com", wait_until="domcontentloaded")
+
+        print("Taking a screenshot!")
+
+        await page.screenshot(path='screenshot.jpeg', full_page=True)
+
+        print("Shutting down...")
+        await browser.close()
+
+asyncio.run(main())
+```
+
+</CodeGroup>
 
 ## Downloading files
 

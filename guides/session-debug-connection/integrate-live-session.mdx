@@ -21,7 +21,9 @@ from allowing the users to see the health check recording in case of false posit
 <Step title="Store the Session ID of each automation run">
   Store the Session ID of each running Session by creating a Session using the [Session API](/api-reference/create-a-session) to store it and pass it to the connect URL as follows:
 
-  ```ts
+  <CodeGroup>
+
+  ```js Playwright (JavaScript)
     import { chromium } from "playwright-core";
 
     async function createSession() {
@@ -52,13 +54,83 @@ from allowing the users to see the health check recording in case of false posit
       // ...
     })()
   ```
+
+  ```js Puppeteer (JavaScript)
+  import puppeteer from 'puppeteer';
+  const fetch = require('node-fetch');
+
+  async function createSession() {
+    const response = await fetch(`https://www.browserbase.com/v1/sessions`, {
+      method: "POST",
+      headers: {
+        'x-bb-api-key': `${process.env.BROWSERBASE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        projectId: process.env.BROWSERBASE_PROJECT_ID,
+      }),
+    });
+    const json = await response.json();
+    return json;
+  }
+
+  (async () => {
+    const { id } = await createSession();
+
+    // TODO:  store the Session `id` to database
+
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${id}`,
+    });
+
+    // ...
+  })();
+
+  ```
+
+  ```python Python
+  from playwright.async_api import async_playwright
+  import asyncio
+  import aiohttp
+
+  async def create_session():
+      async with aiohttp.ClientSession() as session:
+          async with session.post(
+              'https://www.browserbase.com/v1/sessions',
+              headers={
+                  'x-bb-api-key': f'{os.environ["BROWSERBASE_API_KEY"]}',
+                  'Content-Type': 'application/json'
+              },
+              json={'projectId': f'{os.environ["BROWSERBASE_PROJECT_ID"]}'}
+          ) as response:
+              json_data = await response.json()
+              return json_data
+
+  async def main():
+      async with async_playwright() as p:
+          browser = await p.chromium.connect_over_cdp(
+              f'wss://connect.browserbase.com?apiKey={os.environ["BROWSERBASE_API_KEY"]}&sessionId={session_id}'
+          )
+
+          # Your code using the browser goes here
+
+  if __name__ == '__main__':
+      loop = asyncio.get_event_loop()
+      session_id = loop.run_until_complete(create_session())
+      loop.run_until_complete(main())
+  ```
+
+  </CodeGroup>
+
+
 </Step>
 
 <Step title="Request a debug connection URL by using the Session ID">
   If a user tries to access the live view of a running automation, retrieve the Session Debug Connection URLs as follows:
 
-  ```ts
-    async function retrieveDebugConnectionURL(sessionId: string) {
+  <CodeGroup>
+  ```js JavaScript
+    async function retrieveDebugConnectionURL(sessionId) {
       const response = await fetch(
         `https://www.browserbase.com/v1/sessions/${sessionId}/debug`,
         {
@@ -76,6 +148,24 @@ from allowing the users to see the health check recording in case of false posit
 
     // forward `debugConnectionURL` to the front-end
   ```
+
+  ```python Python
+  import aiohttp
+  import os
+
+  async def retrieve_debug_connection_url(session_id):
+      url = f"https://www.browserbase.com/v1/sessions/{session_id}/debug"
+      headers = {
+          'x-bb-api-key': os.environ.get('BROWSERBASE_API_KEY', '')
+      }
+      async with aiohttp.ClientSession() as session:
+          async with session.get(url, headers=headers) as response:
+              json_data = await response.json()
+              return json_data.get('debuggerFullscreenUrl', None)
+
+  ```
+
+  </CodeGroup>
 
   Let's forward the `debugConnectionURL` to the front end to create the final live view with an iframe.
 

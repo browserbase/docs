@@ -91,9 +91,9 @@ limited, but with Browserbase, it's easy.
 
 To confirm your extension is loaded, use the following snippet:
 
-{/* TODO: Puppeteer + Selenium examples */}
+<CodeGroup>
 
-```js
+```js Playwright (JavaScript)
 import { chromium } from "playwright-core";
 (async () => {
   const session = await createSession();
@@ -117,6 +117,64 @@ import { chromium } from "playwright-core";
   await browser.close();
 })().catch((error) => console.error(error.message));
 ```
+
+```js Playwright (JavaScript)
+const puppeteer = require("puppeteer");
+
+(async () => {
+  // Launch a browser instance
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${session.id}`,
+  });
+
+  // Create a new page
+  const page = await browser.newPage();
+
+  // Specify the URL for the test
+  const url = "chrome://extensions";
+
+  // Navigate to the URL
+  await page.goto(url);
+
+  // Get the text content of the specified element
+  const element = await page.$eval("h1", (heading) => heading.textContent);
+
+  // Ensure the browser is closed after the test
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
+
+```python Python
+from playwright.sync_api import sync_playwright
+
+def main():
+    with sync_playwright() as p:
+        # Launch a browser instance
+        browser = p.chromium.connect_over_cdp(
+            f"wss://connect.browserbase.com?apiKey={os.environ['BROWSERBASE_API_KEY']}&sessionId={session.id}"
+        )
+
+        # Create a new page
+        page = browser.new_page()
+
+        # Specify the URL for the test
+        url = "chrome://extensions"
+
+        # Navigate to the URL
+        page.goto(url)
+
+        # Get the text content of the specified element
+        element = page.locator('h1').inner_text()
+
+        # Ensure the browser is closed after the test
+        browser.close()
+
+if __name__ == "__main__":
+    main()
+
+```
+
+</CodeGroup>
 
 <Card
   title="Extensions API"
