@@ -1,0 +1,95 @@
+---
+title: Langchain Python Integration
+sidebarTitle: Python
+description: ""
+---
+
+
+Browserbase provides a `BrowserbaseLoader` to enrich Langchain workflows with:
+- Extraction of text or raw HTML including from web pages, using JavaScript or dynamically rendered text.
+- Image loading via screenshots.
+
+## Get started
+
+<Steps titleSize="h3">
+  <Step title="Get your API Key">
+    Go over the [Dashboard's Settings tab](https://www.browserbase.com/settings):
+
+    <Frame caption="Then copy your API Key directly from the input">
+      <img src="/images/quickstart/api-key.png" />
+    </Frame>
+
+  </Step>
+
+  <Step title="Install the Browserbase SDK">
+
+    ```bash
+      pip install browserbase
+    ```
+
+  </Step>
+
+  <Step title="Load documents or images">
+
+    **Load documents**
+
+    ```python
+    from langchain_community.document_loaders import BrowserbaseLoader
+
+    BROWSERBASE_API_TOKEN = "<Your Browserbase API Key goes here>"
+
+    loader = BrowserbaseLoader(
+        api_token=BROWSERBASE_API_TOKEN,
+        urls=[
+            # load multiple pages
+            "https://www.espn.com",
+            "https://lilianweng.github.io/posts/2023-06-23-agent/"
+        ],
+        text_content=True,
+    )
+
+    documents = loader.load()
+    ```
+
+    <Note>
+      The default value `text_content=False` will return HTML as a LlamaIndex `Document`.
+      Setting `text_content=True` will return LlamaIndex `Document` with text only.
+    </Note>
+
+    **Load images**
+
+    ```python
+    from browserbase import Browserbase
+    from browserbase.helpers.gpt4 import GPT4VImage, GPT4VImageDetail
+    from langchain_core.messages import HumanMessage
+    from langchain_openai import ChatOpenAI
+
+    chat = ChatOpenAI(model="gpt-4-vision-preview", max_tokens=256)
+    browser = Browserbase()
+
+    screenshot = browser.screenshot("https://browserbase.com")
+
+    result = chat.invoke(
+        [
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": "What color is the logo?"},
+                    GPT4VImage(screenshot, GPT4VImageDetail.auto),
+                ]
+            )
+        ]
+    )
+
+    print(result.content)
+    ```
+
+    <Note>
+        By default, the `screenshot()` method takes a screenshot of the visible viewport.
+
+        To take a full-page screenshot, pass the `full_page=True` option.
+    </Note>
+
+    The reference of the `browserbase` package is [available on GitHub](https://github.com/browserbase/python-sdk#browserbase-python-sdk).
+
+  </Step>
+</Steps>

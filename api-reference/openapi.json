@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "OpenAPI Browserbase APIs",
+    "description": "",
     "license": {
       "name": "MIT"
     },
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://www.browserbase.com"
     }
   ],
   "security": [
@@ -19,35 +19,36 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/v1/sessions": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "summary": "List all Sessions",
+        "description": "",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Sessions List response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Plant"
+                    "$ref": "#/components/schemas/Session"
                   }
                 }
               }
             }
           },
-          "400": {
+          "404": {
+            "description": "No Sessions available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
             "description": "Unexpected error",
             "content": {
               "application/json": {
@@ -60,30 +61,31 @@
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "summary": "Create a Session",
+        "description": "",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "Project to attach the Session and optional extension",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/NewSession"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "plant response",
+          "201": {
+            "description": "The created Session",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Session"
                 }
               }
             }
           },
-          "400": {
+          "500": {
             "description": "unexpected error",
             "content": {
               "application/json": {
@@ -96,27 +98,356 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/v1/sessions/{session-id}": {
+      "get": {
+        "summary": "Retrieve a Session",
+        "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "session-id",
             "in": "path",
-            "description": "ID of plant to delete",
+            "description": "ID of Session to retrieve",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Sessions List response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Session"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a Session",
+        "description": "",
+        "requestBody": {
+          "description": "The status to apply",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSession"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "session-id",
+            "in": "path",
+            "description": "ID of Session to update",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The updated Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session-id}/recording": {
+      "get": {
+        "summary": "Retrieve a Session recording",
+        "description": "",
+        "parameters": [
+          {
+            "name": "session-id",
+            "in": "path",
+            "description": "ID of Session to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessions Recording data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionRecordingData"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session-id}/downloads": {
+      "get": {
+        "summary": "Retrieve a Session downloads",
+        "description": "Return the downloads as a .zip file",
+        "parameters": [
+          {
+            "name": "session-id",
+            "in": "path",
+            "description": "ID of Session to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessions List response",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session-id}/debug": {
+      "get": {
+        "summary": "Retrieve a Session Debug Connection URLs",
+        "description": "Get remote access to a Session",
+        "parameters": [
+          {
+            "name": "session-id",
+            "in": "path",
+            "description": "ID of Session to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Remote access URLs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [""],
+                  "properties": {
+                    "debuggerFullscreenUrl": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "debuggerUrl": {
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "wsUrl": {
+                      "type": "string",
+                      "format": "url"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
+            "description": "sessionId is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session-id}/logs": {
+      "get": {
+        "summary": "Retrieve a Session logs",
+        "parameters": [
+          {
+            "name": "session-id",
+            "in": "path",
+            "description": "ID of Session to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessions List response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionLog"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/extensions": {
+      "post": {
+        "summary": "Upload an Extension",
+        "description": "",
+        "requestBody": {
+          "description": "Project to attach the Session and optional extension",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtensionUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The configured Extension",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Extension"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
             "description": "unexpected error",
             "content": {
               "application/json": {
@@ -132,63 +463,252 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "Session": {
         "required": [
-          "name"
+          "id",
+          "createdAt",
+          "startedAt",
+          "endedAt",
+          "projectId"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
+          "id": {
+            "description": "A unique Session ID",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "createdAt": {
+            "description": "",
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAt": {
+            "description": "Date and time when the Session transitioned to the RUNNING state..",
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "description": "Date and time when the Session ended",
+            "type": "string",
+            "format": "date-time"
+          },
+          "projectId": {
+            "description": "A unique Project ID",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "status": {
+            "type": "string",
+            "example": "CREATED",
+            "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
+            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
+          },
+          "taskId": {
+            "description": "The underlying Task ID",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "proxyBytes": {
+            "description": "Proxy bytes Usage",
+            "type": "number"
+          },
+          "expiresAt": {
+            "description": "Date and time when the Session ended",
+            "type": "string",
+            "format": "date-time"
+          },
+          "avg_cpu_usage": {
+            "description": "CPU Usage",
+            "type": "number"
+          },
+          "memory_usage": {
+            "description": "Memory usage",
+            "type": "number"
+          },
+          "details": {
+            "description": "Link to the full Session details",
             "type": "string"
           },
-          "tag": {
-            "description": "Tag to specify the type",
+          "logs": {
+            "description": "Link to the Session logs",
             "type": "string"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "SessionLog": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "description": "The Session ID",
+            "type": "string"
           },
-          {
-            "required": [
-              "id"
-            ],
+          "id": {
+            "description": "The Log ID",
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "1713541653"
+          },
+          "method": {
+            "type": "string"
+          },
+          "request": {
             "type": "object",
             "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+              "timestamp": {
+                "type": "string",
+                "example": "1713541653"
+              },
+              "params": {
+                "type":"object"
+              },
+              "rawBody": {
+                "type": "string"
               }
             }
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "example": "1713541653"
+              },
+              "result": {
+                "type": "object"
+              },
+              "rawBody": {
+                "type": "string"
+              }
+            }
+          },
+          "pageId": {
+            "type": "string"
           }
-        ]
+        }
+      },
+      "SessionRecordingData": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "See https://chromedevtools.github.io/devtools-protocol/",
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "example": "1713541653"
+          },
+          "data": {
+            "type": "object",
+            "example": "See https://chromedevtools.github.io/devtools-protocol/"
+          }
+        }
+      },
+      "NewSession": {
+        "required": [
+          "projectId"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "extensionId": {
+            "type": "string",
+            "description": "The uploaded Extension ID. See [Upload Extension](/api-reference/upload-an-extension).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          }
+        }
+      },
+      "UpdateSession": {
+        "required": [
+          "status",
+          "projectId"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "status": {
+            "type": "string",
+            "example": "CREATED",
+            "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
+            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
+          }
+        }
       },
       "Error": {
         "required": [
-          "error",
           "message"
         ],
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      },
+      "ExtensionUpload": {
+        "required": [
+          "file",
+          "projectId"
+        ],
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "description": "The Project ID. Can be [found here](https://www.browserbase.com/settings).",
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "Extension": {
+        "required": [
+          "fileName",
+          "id",
+          "projectId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "fileName": {
+            "type": "string",
+            "example": "extension_name.zip"
+          },
+          "projectId": {
+            "type": "string",
+            "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
           }
         }
       }
     },
     "securitySchemes": {
       "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-bb-api-key",
+        "description": "Your [Browserbase API Key](https://www.browserbase.com/settings)."
       }
     }
   }

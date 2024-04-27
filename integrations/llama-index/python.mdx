@@ -1,0 +1,79 @@
+---
+title: LlamaIndex Python Integration
+sidebarTitle: Python
+description: "Load Documents from dynamic Web Pages and load images."
+---
+
+
+Browserbase provides a `WebReader` to enrich your LlamaIndex LLM data pipelines.
+
+The `BrowserbaseWebReader` comes with support for:
+- Document loading, including web pages using JavaScript or dynamically rendered text.
+- Image loading via screenshots.
+
+## Get started
+
+<Steps titleSize="h3">
+  <Step title="Get your API Key">
+    Go over the [Dashboard's Settings tab](https://www.browserbase.com/settings):
+
+    <Frame caption="Then copy your API Key directly from the input">
+      <img src="/images/quickstart/api-key.png" />
+    </Frame>
+
+    Make sure to set your API Key in the `BROWSERBASE_KEY` environment variable.
+
+  </Step>
+
+  <Step title="Install the Browserbase SDK">
+
+    ```bash
+      pip install browserbase
+    ```
+
+  </Step>
+
+  <Step title="Load documents or images">
+
+    **Load documents**
+
+    ```python
+    from llama_index.readers.web import BrowserbaseWebReader
+
+    reader = BrowserbaseWebReader()
+    docs = reader.load_data(
+        urls=[
+            "https://example.com",
+        ],
+        # Text mode
+        text_content=True,
+    )
+    ```
+
+    <Note>
+        The default value `text_content=False` will return HTML as a LlamaIndex `Document`.
+        Setting `text_content=True` will return LlamaIndex `Document` with text only.
+    </Note>
+
+    **Load images**
+
+    ```python
+    from browserbase import Browserbase, GPT4VImage
+
+    browser = Browserbase()
+    screenshot = browser.screenshot("https://browserbase.com")
+
+    # Ready to use image object for Multi-Modal GPT4 use case
+    gpt4_img = GPT4VImage(screenshot)
+    ```
+
+    <Note>
+        By default, the `screenshot()` method takes a screenshot of the visible viewport.
+
+        To take a full-page screenshot, pass the `full_page=True` option.
+    </Note>
+
+    The reference of the `browserbase` package is [available on GitHub](https://github.com/browserbase/python-sdk#browserbase-python-sdk).
+
+  </Step>
+</Steps>

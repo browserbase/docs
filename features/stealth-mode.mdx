@@ -1,0 +1,236 @@
+---
+title: Stealth Mode
+description: "Proxies, Captcha solving, and bot avoidance."
+mode: "wide"
+---
+
+Browserbase's [custom-built Chromium Browser](/features/browsers) comes with a
+set of features enabling you to navigate in Stealth mode.
+
+## Features
+
+### Proxies & Residential IPs
+
+Each Session gets a new Residential IP. Proxies provided by our vendors can be
+enabled as follows with the `enableProxy=true` param:
+
+<CodeGroup>
+
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
+
+(async () => {
+  const browser = await chromium.connectOverCDP(
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  );
+
+  // Getting the default context to ensure the sessions are recorded.
+  const defaultContext = browser.contexts()[0];
+  const page = defaultContext.pages()[0];
+
+  await page.goto("https://browserbase.com/");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
+
+```javascript Puppeteer (JavaScript)
+import puppeteer from "puppeteer-core";
+
+(async () => {
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true`,
+  });
+
+  const page = await browser.newPage();
+
+  await page.goto("https://www.browserbase.com");
+  await page.close();
+  await browser.close();
+})().catch((error) => console.error(error.message));
+```
+
+```python Python
+from playwright.sync_api import sync_playwright, Playwright
+
+def run(playwright: Playwright):
+    chromium = playwright.chromium
+    browser = chromium.connect_over_cdp('wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&enableProxy=true')
+    context = browser.contexts[0]
+    page = context.pages[0]
+
+with sync_playwright() as playwright:
+    run(playwright)
+```
+
+</CodeGroup>
+
+### Fingerprinting
+
+The fingerprint mechanism handles the viewport, user agents, and headers and can
+be configured when creating a new Session through the API with the `fingerprint`
+field:
+
+<CodeGroup>
+
+```javascript Playwright (JavaScript)
+import { chromium } from "playwright-core";
+
+async function createSession() {
+  const response = await fetch(`https://www.browserbase.com/v1/sessions`, {
+    method: "POST",
+    headers: {
+      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      projectId: process.env.BROWSERBASE_PROJECT_ID,
+      fingerprint: {
+        locales: ["en", "en-US", "de"],
+        operatingSystems: ["android"],
+      },
+    }),
+  });
+  const json = await response.json();
+  return json;
+}
+
+(async () => {
+  const { id } = await createSession();
+  const browser = await chromium.connectOverCDP(
+    // we connect to a Session created via the API
+    `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${id}`,
+  );
+  const defaultContext = browser.contexts()[0];
+  const page = defaultContext.pages()[0];
+
+  await page.goto("https://www.browserbase.com");
+
+  await page.close();
+  await browser.close();
+})().catch(console.error);
+```
+
+```js Puppeteer (JavaScript)
+const puppeteer = require("puppeteer");
+
+async function createSession() {
+  const response = await fetch(`https://www.browserbase.com/v1/sessions`, {
+    method: "POST",
+    headers: {
+      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      projectId: process.env.BROWSERBASE_PROJECT_ID,
+      fingerprint: {
+        locales: ["en", "en-US", "de"],
+        operatingSystems: ["android"],
+      },
+    }),
+  });
+  const json = await response.json();
+  return json;
+}
+
+(async () => {
+  const { id } = await createSession();
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}&sessionId=${id}`,
+  });
+  const pages = await browser.pages();
+  const page = pages[0];
+
+  await page.goto("https://www.browserbase.com");
+
+  await page.close();
+  await browser.close();
+})().catch(console.error);
+```
+
+```python Python
+from playwright.async_api import async_playwright
+import aiohttp
+
+async def create_session():
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            "https://www.browserbase.com/v1/sessions",
+            headers={
+                "x-bb-api-key": f"{os.getenv('BROWSERBASE_API_KEY')}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "projectId": os.getenv('BROWSERBASE_PROJECT_ID'),
+                "fingerprint": {
+                    "locales": ["en", "en-US", "de"],
+                    "operatingSystems": ["android"]
+                }
+            }
+        ) as response:
+            json_data = await response.json()
+            return json_data
+
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.connect_over_cdp(
+            f"wss://connect.browserbase.com?apiKey={os.getenv('BROWSERBASE_API_KEY')}&sessionId={session['id']}"
+        )
+        context = await browser.new_context()
+        page = await context.new_page()
+
+        await page.goto("https://www.browserbase.com")
+
+        await page.close()
+        await context.close()
+        await browser.close()
+
+if __name__ == "__main__":
+    import os
+    import asyncio
+
+    session = asyncio.run(create_session())
+    asyncio.run(main())
+```
+
+</CodeGroup>
+
+The `fingerprint` field is an object with the following properties:
+
+| Property name                   | Type       | Available values                                                                   | Example                                            |
+| ------------------------------- | ---------- | ---------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `browserListQuery` (_optional_) | `string`   | [Docs](https://github.com/browserslist/browserslist#full-list)                     | `"> 0.5%, last 2 versions, Firefox ESR, not dead"` |
+| `browsers` (_optional_)         | `string[]` | `"chrome"`, `"edge"`, `"firefox"`, `"safari"`                                      | `["chrome", "firefox"]`                            |
+| `devices` (_optional_)          | `string[]` | `"desktop"`, `"mobile"`                                                            | `["mobile"]`                                       |
+| `httpVersion` (_optional_)      | `number`   | `1`, `2`                                                                           | `1`                                                |
+| `locales` (_optional_)          | `string[]` | [Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)  | `["en-US", "es"]`                                  |
+| `operatingSystems` (_optional_) | `string[]` | `"android"`,`"ios"`,`"linux"`,`"macos"`,`"windows"`                                | `["android", "ios"]`                               |
+| `screen` (_optional_)           | `object`   | `{ maxHeight?: number; maxWidth?: number; minHeight?: number; minWidth?: number }` | `{ maxHeight: 500; maxWidth: 1024; }`              |
+
+<Note>
+  - `browserListQuery` takes precedence on `browsers` - `operatingSystems` set
+  to `ios` or `android` requires `devices` to include `"mobile"` - `locales`
+  accepts 10 values maximum
+</Note>
+
+### Captcha solving
+
+Captchas get automatically detected and solved.
+
+Captcha solvers are currently in beta; please get in touch with us to test it.
+
+## Limitations
+
+- We bundle proxies into the browser so you don't have to worry about it. This
+  means that bringing your own proxy vendor is not supported at this time.
+- Additionally, some high-risk categories are restricted by our proxy vendors
+  and cannot be proxied; this includes:
+  - All Apple domains, including iTunes and App stores
+  - Entertainment (e.g., Netflix, Playstation)
+  - Banking and other financial institutions
+  - Some Google domains
+  - Government websites
+  - Streaming
+  - Ticketing
+  - LinkedIn
+  - Mailing
