@@ -49,7 +49,15 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "quickstart", "under-the-hood"]
+      "pages": ["introduction", {
+        "group": "Quickstart",
+        "pages": [
+          "quickstart/playground",
+          "quickstart/playwright",
+          "quickstart/puppeteer",
+          "quickstart/selenium"
+        ]
+      }, "under-the-hood"]
     },
     {
       "group": "Features",
