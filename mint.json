@@ -12,7 +12,8 @@
   },
   "analytics": {
     "posthog": {
-      "apiKey": "phc_TODO"
+        "apiKey": "phc_L5OdEhuGyIcW1JtLxco9njLYnuUx10mqlVe6Tj54kHS",
+        "apiHost": "https://us.i.posthog.com"
     }
   },
   "favicon": "/favicon.svg",
