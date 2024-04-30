@@ -174,7 +174,7 @@ async function saveDownloadsOnDisk(sessionId: string, retryForSeconds: number) {
   const client = await defaultContext.newCDPSession(page);
   await client.send("Page.setDownloadBehavior", {
     behavior: "allow",
-    downloadPath: "/home/browser/downloads",
+    downloadPath: "downloads",
     //@ts-ignore
     eventsEnabled: true,
   });
@@ -255,7 +255,7 @@ async function saveDownloadsOnDisk(sessionId, retryForSeconds) {
   const client = await page.createCDPSession();
 	await client.send("Page.setDownloadBehavior", {
     behavior: "allow",
-    downloadPath: "/home/browser/downloads",
+    downloadPath: "downloads",
     //@ts-ignore
     eventsEnabled: true,
   });
