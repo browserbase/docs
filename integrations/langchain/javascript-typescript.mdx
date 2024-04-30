@@ -1,0 +1,53 @@
+---
+title: Langchain TypeScript/JavaScript Integration
+sidebarTitle: TypeScript/JavaScript
+description: ""
+---
+
+
+Browserbase provides a `BrowserbaseLoader` to enrich Langchain workflows with:
+- Extraction of text or raw HTML including from web pages, using JavaScript or dynamically rendered text.
+- Image loading via screenshots.
+
+## Get started
+
+<Steps titleSize="h3">
+  <Step title="Get your API Key">
+    Go over the [Dashboard's Settings tab](https://www.browserbase.com/settings):
+
+    <Frame caption="Then copy your API Key directly from the input">
+      <img src="/images/quickstart/api-key.png" />
+    </Frame>
+
+  </Step>
+
+  <Step title="Install the Browserbase SDK">
+
+    ```bash
+      pip install browserbase
+    ```
+
+  </Step>
+
+  <Step title="Load documents or images">
+
+    **Load documents**
+
+    ```ts
+    import {
+      BrowserbaseLoader
+    } from "langchain/document_loaders/web/browserbase.js";
+
+    const loader = new BrowserbaseLoader(
+      ["https://example.com"],
+      { textContent: true }
+    );
+    const docs = await loader.load();
+    ```
+
+    <Note>
+      The default value `textContent: false` will return HTML as a LlamaIndex `Document`.
+      Setting `textContent: true` will return LlamaIndex `Document` with text only.
+    </Note>
+  </Step>
+</Steps>
