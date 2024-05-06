@@ -59,7 +59,7 @@ A typical Playwright or Puppeteer program looks as follows:
     })().catch((error) => console.error(error.message));
     ```
 
-    ```python Python
+    ```python Playwright (Python)
     from playwright.sync_api import sync_playwright, Playwright
 
     def run(playwright: Playwright):
@@ -80,6 +80,13 @@ A typical Playwright or Puppeteer program looks as follows:
     ```
 
     </CodeGroup>
+
+<Note>
+
+Selenium (Python) do not provide BrowserContext and Pages,
+[see Dos and Don't](#dos).
+
+</Note>
 
 Let's look at the `Browser`, `BrowserContext`, and `Page` definitions by
 comparing them to our day-to-day Browser:
@@ -222,7 +229,7 @@ Here are some dos and don'ts to help get the best out of Browserbase:
     })().catch((error) => console.error(error.message));
     ```
 
-    ```python Python
+    ```python Playwright (Python)
     from playwright.sync_api import sync_playwright, Playwright
 
     def run(playwright: Playwright):
@@ -238,6 +245,33 @@ Here are some dos and don'ts to help get the best out of Browserbase:
 
     with sync_playwright() as playwright:
         run(playwright)
+    ```
+
+    ```python Selenium (Python)
+    from selenium import webdriver
+    from selenium.webdriver.remote.remote_connection import RemoteConnection
+    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+    import requests
+    import os
+
+    def run():
+        # see create_session and CustomRemoteConnection definition
+        #   at https://docs.browserbase.com/quickstart/selenium
+        session_id = create_session()
+        custom_conn = CustomRemoteConnection('http://connect.browserbase.com/webdriver', session_id)
+        options = webdriver.ChromeOptions()
+        options.debugger_address = "localhost:9223"
+        driver = webdriver.Remote(custom_conn, options=options)
+        driver.get("https://www.browserbase.com")
+
+        # Selenium don't have the concept of BrowserContext and Pages
+
+        get_title = driver.title
+        print(get_title)
+        # Make sure to quit the driver so your session is ended!
+        driver.quit()
+
+    run()
     ```
     </CodeGroup>
 
@@ -335,7 +369,7 @@ import puppeteer from "puppeteer";
 })().catch((error) => console.error(error.message));
 ```
 
-```python
+```python Playwright (Python)
 from playwright.sync_api import sync_playwright
 
 async def main():

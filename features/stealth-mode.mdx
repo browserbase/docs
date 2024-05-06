@@ -50,7 +50,7 @@ import puppeteer from "puppeteer-core";
 })().catch((error) => console.error(error.message));
 ```
 
-```python Python
+```python (Playwright) Python
 from playwright.sync_api import sync_playwright, Playwright
 
 def run(playwright: Playwright):
@@ -61,6 +61,52 @@ def run(playwright: Playwright):
 
 with sync_playwright() as playwright:
     run(playwright)
+```
+
+```python (Selenium) Python
+from selenium import webdriver
+from selenium.webdriver.remote.remote_connection import RemoteConnection
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import requests
+import os
+
+def create_session():
+    url = 'https://www.browserbase.com/v1/sessions'
+    headers = {'Content-Type': 'application/json', 'x-bb-api-key': os.environ["BROWSERBASE_API_KEY"]}
+    response = requests.post(url, json={ "projectId": os.environ["BROWSERBASE_PROJECT_ID"] }, headers=headers)
+    return response.json()['id']
+
+
+class CustomRemoteConnection(RemoteConnection):
+    _session_id = None
+
+    def __init__(self, remote_server_addr: str, session_id: str):
+        super().__init__(remote_server_addr)
+        self._session_id = session_id
+
+    def get_remote_connection_headers(self, parsed_url, keep_alive=False):
+        headers = super().get_remote_connection_headers(parsed_url, keep_alive)
+        headers.update({'x-bb-api-key': os.environ["BROWSERBASE_API_KEY"]})
+        headers.update({'session-id': self._session_id})
+        # enable proxy here
+        headers.update({'enable-proxy': "true"})
+        return headers
+
+
+def run():
+    session_id = create_session()
+    custom_conn = CustomRemoteConnection('http://connect.browserbase.com/webdriver', session_id)
+    options = webdriver.ChromeOptions()
+    options.debugger_address = "localhost:9223"
+    driver = webdriver.Remote(custom_conn, options=options)
+    driver.get("https://www.browserbase.com")
+    get_title = driver.title
+    print(get_title)
+    # Make sure to quit the driver so your session is ended!
+    driver.quit()
+
+run()
+
 ```
 
 </CodeGroup>
@@ -148,33 +194,30 @@ async function createSession() {
 })().catch(console.error);
 ```
 
-```python Python
-from playwright.async_api import async_playwright
-import aiohttp
+```python Playwright (Python)
+from playwright.sync_api import sync_playwright
+import requests
+import os
 
-async def create_session():
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            "https://www.browserbase.com/v1/sessions",
-            headers={
-                "x-bb-api-key": f"{os.getenv('BROWSERBASE_API_KEY')}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "projectId": os.getenv('BROWSERBASE_PROJECT_ID'),
-                "fingerprint": {
-                    "locales": ["en", "en-US", "de"],
-                    "operatingSystems": ["android"]
-                }
-            }
-        ) as response:
-            json_data = await response.json()
-            return json_data
+def create_session():
+    url = 'https://www.browserbase.com/v1/sessions'
+    headers = {'Content-Type': 'application/json', 'x-bb-api-key': os.environ["BROWSERBASE_API_KEY"]}
+    json = {
+        "projectId": os.environ["BROWSERBASE_PROJECT_ID"],
+        # Fingerprint options
+        "fingerprint": {
+            "locales": ["en", "en-US", "de"],
+            "operatingSystems": ["android"]
+        }
+    }
+    response = requests.post(url, json=json, headers=headers)
+    return response.json()['id']
 
-async def main():
-    async with async_playwright() as p:
+def run():
+  with sync_playwright() as p:
+        session_id = create_session()
         browser = await p.chromium.connect_over_cdp(
-            f"wss://connect.browserbase.com?apiKey={os.getenv('BROWSERBASE_API_KEY')}&sessionId={session['id']}"
+            f"wss://connect.browserbase.com?apiKey={os.environ['BROWSERBASE_API_KEY']}&sessionId={session_id}"
         )
         context = await browser.new_context()
         page = await context.new_page()
@@ -185,12 +228,60 @@ async def main():
         await context.close()
         await browser.close()
 
-if __name__ == "__main__":
-    import os
-    import asyncio
+run()
+```
 
-    session = asyncio.run(create_session())
-    asyncio.run(main())
+```python Selenium (Python)
+from selenium import webdriver
+from selenium.webdriver.remote.remote_connection import RemoteConnection
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import requests
+import os
+
+def create_session():
+    url = 'https://www.browserbase.com/v1/sessions'
+    headers = {'Content-Type': 'application/json', 'x-bb-api-key': os.environ["BROWSERBASE_API_KEY"]}
+    json = {
+        "projectId": os.environ["BROWSERBASE_PROJECT_ID"],
+        # Fingerprint options
+        "fingerprint": {
+            "locales": ["en", "en-US", "de"],
+            "operatingSystems": ["android"]
+        }
+    }
+    response = requests.post(url, json=json, headers=headers)
+    return response.json()['id']
+
+
+class CustomRemoteConnection(RemoteConnection):
+    _session_id = None
+
+    def __init__(self, remote_server_addr: str, session_id: str):
+        super().__init__(remote_server_addr)
+        self._session_id = session_id
+
+    def get_remote_connection_headers(self, parsed_url, keep_alive=False):
+        headers = super().get_remote_connection_headers(parsed_url, keep_alive)
+        headers.update({'x-bb-api-key': os.environ["BROWSERBASE_API_KEY"]})
+        headers.update({'session-id': self._session_id})
+        # enable proxy here
+        headers.update({'enable-proxy': "true"})
+        return headers
+
+
+def run():
+    session_id = create_session()
+    custom_conn = CustomRemoteConnection('http://connect.browserbase.com/webdriver', session_id)
+    options = webdriver.ChromeOptions()
+    options.debugger_address = "localhost:9223"
+    driver = webdriver.Remote(custom_conn, options=options)
+    driver.get("https://www.browserbase.com")
+    get_title = driver.title
+    print(get_title)
+    # Make sure to quit the driver so your session is ended!
+    driver.quit()
+
+run()
 ```
 
 </CodeGroup>
