@@ -120,10 +120,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Session"
-                  }
+                  "$ref": "#/components/schemas/Session"
                 }
               }
             }
