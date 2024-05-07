@@ -16,7 +16,7 @@ enabled as follows with the `enableProxy=true` param:
 
 <CodeGroup>
 
-```javascript Playwright (JavaScript)
+```typescript Playwright (TypeScript)
 import { chromium } from "playwright-core";
 
 (async () => {
@@ -34,7 +34,7 @@ import { chromium } from "playwright-core";
 })().catch((error) => console.error(error.message));
 ```
 
-```javascript Puppeteer (JavaScript)
+```typescript Puppeteer (TypeScript)
 import puppeteer from "puppeteer-core";
 
 (async () => {
@@ -119,7 +119,7 @@ field:
 
 <CodeGroup>
 
-```javascript Playwright (JavaScript)
+```typescript Playwright (TypeScript)
 import { chromium } from "playwright-core";
 
 async function createSession() {
@@ -157,7 +157,7 @@ async function createSession() {
 })().catch(console.error);
 ```
 
-```js Puppeteer (JavaScript)
+```typescript Puppeteer (TypeScript)
 const puppeteer = require("puppeteer");
 
 async function createSession() {

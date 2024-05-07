@@ -21,7 +21,7 @@ Puppeteer, or Selenium) or via
 
 <CodeGroup>
 
-```jsx Playwright (JavaScript)
+```typescript Playwright (TypeScript)
 import { chromium } from "playwright-core";
 (async () => {
   const browser = await chromium.connectOverCDP(
@@ -37,7 +37,7 @@ import { chromium } from "playwright-core";
 })().catch((error) => console.error(error.message));
 ```
 
-```jsx Puppeteer (JavaScript)
+```typescript Puppeteer (TypeScript)
 import puppeteer from "puppeteer-core";
 
 (async () => {

@@ -18,7 +18,7 @@ A typical Playwright or Puppeteer program looks as follows:
 
  <CodeGroup>
 
-    ```javascript Playwright (JavaScript)
+    ```typescript Playwright (TypeScript)
     import { chromium } from "playwright-core";
 
     (async () => {
@@ -39,7 +39,7 @@ A typical Playwright or Puppeteer program looks as follows:
     })().catch((error) => console.error(error.message));
     ```
 
-    ```javascript Puppeteer (JavaScript)
+    ```typescript Puppeteer (TypeScript)
     import puppeteer from "puppeteer-core";
 
     (async () => {
@@ -192,7 +192,7 @@ Here are some dos and don'ts to help get the best out of Browserbase:
 <Accordion title="Always grab the first Page and BrowserContext" defaultOpen>
   <CodeGroup>
 
-    ```javascript Playwright (JavaScript)
+    ```typescript Playwright (TypeScript)
     import { chromium } from "playwright-core";
 
     (async () => {
@@ -211,7 +211,7 @@ Here are some dos and don'ts to help get the best out of Browserbase:
     })().catch((error) => console.error(error.message));
     ```
 
-    ```javascript Puppeteer (JavaScript)
+    ```typescript Puppeteer (TypeScript)
     import puppeteer from "puppeteer-core";
 
     (async () => {
@@ -299,7 +299,7 @@ Here are some dos and don'ts to help get the best out of Browserbase:
 
 <CodeGroup>
 
-```javascript Playwright (JavaScript)
+```typescript Playwright (TypeScript)
 import { chromium } from "playwright-core";
 
 (async () => {
@@ -307,7 +307,7 @@ import { chromium } from "playwright-core";
     `wss://connect.browserbase.com?apiKey=${process.env.BROWSERBASE_API_KEY}`,
   );
 
-  const getContent = async (url) => {
+  const getContent = async (url: string) => {
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -337,7 +337,7 @@ import { chromium } from "playwright-core";
 })().catch((error) => console.error(error.message));
 ```
 
-```javascript Puppeteer (JavaScript)
+```typescript Puppeteer (TypeScript)
 import puppeteer from "puppeteer";
 
 (async () => {

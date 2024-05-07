@@ -23,7 +23,7 @@ from allowing the users to see the health check recording in case of false posit
 
   <CodeGroup>
 
-  ```js Playwright (JavaScript)
+  ```typescript Playwright (TypeScript)
     import { chromium } from "playwright-core";
 
     async function createSession() {
@@ -55,7 +55,7 @@ from allowing the users to see the health check recording in case of false posit
     })()
   ```
 
-  ```js Puppeteer (JavaScript)
+  ```typescript Puppeteer (TypeScript)
   import puppeteer from 'puppeteer';
   const fetch = require('node-fetch');
 
@@ -129,8 +129,8 @@ from allowing the users to see the health check recording in case of false posit
   If a user tries to access the live view of a running automation, retrieve the Session Debug Connection URLs as follows:
 
   <CodeGroup>
-  ```js JavaScript
-    async function retrieveDebugConnectionURL(sessionId) {
+  ```typescript TypeScript
+    async function retrieveDebugConnectionURL(sessionId: string) {
       const response = await fetch(
         `https://www.browserbase.com/v1/sessions/${sessionId}/debug`,
         {
