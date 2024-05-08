@@ -100,7 +100,7 @@
     },
     "/v1/sessions/{session-id}": {
       "get": {
-        "summary": "Retrieve a Session",
+        "summary": "Get a Session",
         "description": "",
         "parameters": [
           {
@@ -199,7 +199,7 @@
     },
     "/v1/sessions/{session-id}/recording": {
       "get": {
-        "summary": "Retrieve a Session recording",
+        "summary": "Get Session recording",
         "description": "",
         "parameters": [
           {
@@ -242,7 +242,7 @@
     },
     "/v1/sessions/{session-id}/downloads": {
       "get": {
-        "summary": "Retrieve a Session downloads",
+        "summary": "Get Session downloads",
         "description": "Return the downloads as a .zip file",
         "parameters": [
           {
@@ -283,7 +283,7 @@
     },
     "/v1/sessions/{session-id}/debug": {
       "get": {
-        "summary": "Retrieve a Session Debug Connection URLs",
+        "summary": "Get Session Debug Connection URLs",
         "description": "Get remote access to a Session",
         "parameters": [
           {
@@ -358,7 +358,7 @@
     },
     "/v1/sessions/{session-id}/logs": {
       "get": {
-        "summary": "Retrieve a Session logs",
+        "summary": "Get Session logs",
         "parameters": [
           {
             "name": "session-id",

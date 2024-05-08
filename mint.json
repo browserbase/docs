@@ -84,6 +84,10 @@
       ]
     },
     {
+      "group": "Connect API",
+      "pages": ["api-reference/connect"]
+    },
+    {
       "group": "Sessions API",
       "pages": [
         "api-reference/list-all-sessions",

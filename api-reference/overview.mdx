@@ -1,38 +1,22 @@
 ---
 title: "Overview"
-description: "A finer control over your Browser Sessions."
+description: "Create, Connect and Retrieve information from Sessions."
 ---
 
-## Authentication
+## Connect to a Session
 
-All API endpoints are authenticated using your
-[Browserbase API Key](/quickstart#start-a-browser-session-from-the-code),
-configured as follow:
+  <Card
+    title="Connect API"
+    icon="server"
+    iconType="light"
+    href="/api-reference/connect"
+  >
+    Use Websocket or HTTP to connect or create a Session on-the-fly
+  </Card>
 
-<CodeGroup>
 
-```bash cURL
-curl -X GET "https://www.browserbase.com/v1/sessions/${SESSION_ID}" \
-     -H "x-bb-api-key: ${BROWSERBASE_API_KEY}" \
-```
+## Create custom Sessions and retrieve all information (ex: logs)
 
-```js Node.js/Fetch
-const response = await fetch(
-  `https://www.browserbase.com/v1/sessions/${sessionId}`,
-  {
-    method: "GET",
-    headers: {
-      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
-    },
-  },
-);
-```
-
-</CodeGroup>
-
-## APIs
-
-Browserbase offers 2 main APIs:
 
 <CardGroup cols={2}>
   <Card
@@ -52,3 +36,44 @@ Browserbase offers 2 main APIs:
     Configure custom Chrome extensions for your Sessions.
   </Card>
 </CardGroup>
+
+
+**Authentication**
+
+All REST endpoints are authenticated using your
+[Browserbase API Key](/quickstart#start-a-browser-session-from-the-code),
+configured as follow:
+
+<CodeGroup>
+
+```js TypeScript
+const response = await fetch(
+  `https://www.browserbase.com/v1/sessions/${sessionId}`,
+  {
+    method: "GET",
+    headers: {
+      "x-bb-api-key": `${process.env.BROWSERBASE_API_KEY}`,
+    },
+  },
+);
+```
+
+```python Python
+import requests
+import os
+
+url = "https://www.browserbase.com/v1/sessions"
+
+headers = {"x-bb-api-key": os.environ["BROWSERBASE_API_KEY"]}
+
+response = requests.request("GET", url, headers=headers)
+```
+
+
+```bash cURL
+curl -X GET "https://www.browserbase.com/v1/sessions/${SESSION_ID}" \
+     -H "x-bb-api-key: ${BROWSERBASE_API_KEY}" \
+```
+
+
+</CodeGroup>
