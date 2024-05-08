@@ -1,0 +1,56 @@
+---
+title: Fetch and extract data from complex web pages
+sidebarTitle: Quickstart
+description: "Reliably fetch data from web pages containing JavaScript or anti-bots mechanisms."
+---
+
+
+<Steps titleSize="h3">
+  <Step title="Get your API Key">
+    Go over the [Dashboard's Settings tab](https://www.browserbase.com/settings):
+
+    <Frame caption="Then copy your API Key directly from the input">
+      <img src="/images/quickstart/api-key.png" />
+    </Frame>
+
+    Make sure to set your API Key in the `BROWSERBASE_KEY` environment variable.
+
+  </Step>
+
+  <Step title="Install the Browserbase Haystack integration package">
+
+    ```bash
+    pip install browserbase-haystack
+    ```
+
+  </Step>
+
+  <Step title="Import and configure BrowserbaseFetcher">
+
+    
+    ```py
+    from haystack import Pipeline
+    from haystack.components.generators import OpenAIGenerator
+    from haystack.components.builders import PromptBuilder
+    from browserbase_haystack import BrowserbaseFetcher
+
+    prompt_template = (
+        "Tell me the titles of the given pages. Pages: {{ documents }}"
+    )
+    prompt_builder = PromptBuilder(template=prompt_template)
+    llm = OpenAIGenerator()
+
+    browserbase_fetcher = BrowserbaseFetcher()
+
+    pipe = Pipeline()
+    pipe.add_component("fetcher", browserbase_fetcher)
+    pipe.add_component("prompt_builder", prompt_builder)
+    pipe.add_component("llm", llm)
+
+    pipe.connect("fetcher.documents", "prompt_builder.documents")
+    pipe.connect("prompt_builder.prompt", "llm.prompt")
+    result = pipe.run(data={"fetcher": {"urls": ["https://example.com"]}})
+    ```
+
+  </Step>
+</Steps>

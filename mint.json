@@ -65,7 +65,7 @@
       "pages": ["features/browsers", "features/sessions", "features/session-debugger", "features/stealth-mode", "features/screenshots-and-downloads"]
     },
     {
-      "group": "Integrations",
+      "group": "Browserbase for AI",
       "pages": [
         {
           "group": "Langchain",
@@ -74,6 +74,14 @@
         {
           "group": "LlamaIndex",
           "pages": ["integrations/llama-index/introduction", "integrations/llama-index/python"]
+        },
+        {
+          "group": "CrewAI",
+          "pages": ["integrations/crew-ai/introduction", "integrations/crew-ai/python"]
+        },
+        {
+          "group": "Haystack",
+          "pages": ["integrations/haystack/introduction", "integrations/haystack/python"]
         }
       ]
     },

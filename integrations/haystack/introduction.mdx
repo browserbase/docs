@@ -1,0 +1,47 @@
+---
+title: Haystack Integration
+sidebarTitle: Introduction
+description: "Reliably fetch data from web pages containing JavaScript or anti-bots mechanisms."
+---
+
+## Introduction
+
+Haystack is a framework for building enterprise-grade LLM pipelines with a wide range of [Pipeline Components](https://docs.haystack.deepset.ai/docs/components)
+to provide rich answers on large and heterogeneous document sets.
+
+```mermaid
+graph RL
+    user["User"]
+    user--"How to start a Session on Browserbase in TypeScript?"-->A
+    A--"use createSession() method from the SDK"-->user
+
+    subgraph A ["Haystack Pipeline"]
+        DS[Document Store] -->|Stores data| P[Preprocessor]
+        P -->|Cleans & segments documents| DR[Document Retriever]
+        DR -->|Finds relevant documents| R[Reader]
+        R -->|Extracts answers| O[Output]
+        DS -->|Update/Delete documents| DS
+        DS -->|Fetches documents| DR
+        DR -->|Optional Re-ranking| RR[Re-ranker]
+        RR --> R
+        U[User] -->|Inputs queries| DR
+        U -->|Provides feedback| F[Feedback Loop]
+        F -->|Improves model| R
+        O -->|Delivers final answers| U
+    end
+```
+
+Browserbase provides a `BrowserbaseFetcher`, enabling the retrieval of data from JavaScript-powered web pages or websites with anti-bots mechanisms.
+
+
+## Add Browserbase to your Haystack Pipeline
+
+
+<Card
+title="Fetch rich webpages within your Haystack pipeline"
+icon="book"
+iconType="light"
+href="/integrations/haystack/python"
+>
+Configure `BrowserbaseFetcher` for your Pipeline.
+</Card>
