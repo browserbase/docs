@@ -624,6 +624,74 @@
             "type": "string",
             "description": "The uploaded Extension ID. See [Upload Extension](/api-reference/upload-an-extension).",
             "example": "1b4d49fc-f018-40e6-9287-df7bc19e351d"
+          },
+          "fingerprint": {
+            "type": "object",
+            "description": "See usage examples [in the Stealth Mode page](/features/stealth-mode#fingerprinting).",
+            "properties": {
+              "browserListQuery": {
+                "type": "string",
+                "description": "Ex: '> 0.5%, last 2 versions, Firefox ESR, not dead'. See [full list here](https://github.com/browserslist/browserslist#full-list).",
+                "example": "> 0.5%, last 2 versions, Firefox ESR, not dead"
+              },
+              "httpVersion": {
+                "type": "number",
+                "description": "1 or 2.",
+                "example": "1"
+              },
+              "browsers": {
+                "type": "array",
+                "description": "Note: `browserListQuery` takes precedence on `browsers`.",
+                "example": "[\"chrome\", \"firefox\"]",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "chrome",
+                    "edge",
+                    "firefox",
+                    "safari"
+                  ]
+                }
+              },
+              "devices": {
+                "type": "array",
+                "example": "[\"desktop\"]",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "desktop",
+                    "mobile"
+                  ]
+                }
+              },
+              "locales": {
+                "type": "array",
+                "description": "Full list of locales is available [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language).",
+                "example": "[\"en-US\", \"es\"]",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "operatingSystems": {
+                "type": "array",
+                "description": "Note: `operatingSystems` set to `ios` or `android` requires `devices` to include `\"mobile\"`.",
+                "example": "[\"android\", \"ios\"]",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "android",
+                    "ios",
+                    "linux",
+                    "macos",
+                    "windows"
+                  ]
+                }
+              },
+              "screen": {
+                "type": "object",
+                "description": "`{ maxHeight?: number; maxWidth?: number; minHeight?: number; minWidth?: number }`"
+              }
+            }
           }
         }
       },
