@@ -73,7 +73,7 @@
         },
         {
           "group": "LlamaIndex",
-          "pages": ["integrations/llama-index/python"]
+          "pages": ["integrations/llama-index/introduction", "integrations/llama-index/python"]
         }
       ]
     },

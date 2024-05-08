@@ -5,18 +5,18 @@ description: "Create, Connect and Retrieve information from Sessions."
 
 ## Connect to a Session
 
-  <Card
-    title="Connect API"
-    icon="server"
-    iconType="light"
-    href="/api-reference/connect"
-  >
-    Use Websocket or HTTP to connect or create a Session on-the-fly
-  </Card>
+{" "}
 
+<Card
+  title="Connect API"
+  icon="server"
+  iconType="light"
+  href="/api-reference/connect"
+>
+  Use Websocket or HTTP to connect or create a Session on-the-fly
+</Card>
 
 ## Create custom Sessions and retrieve all information (ex: logs)
-
 
 <CardGroup cols={2}>
   <Card
@@ -36,7 +36,6 @@ description: "Create, Connect and Retrieve information from Sessions."
     Configure custom Chrome extensions for your Sessions.
   </Card>
 </CardGroup>
-
 
 **Authentication**
 
@@ -69,11 +68,9 @@ headers = {"x-bb-api-key": os.environ["BROWSERBASE_API_KEY"]}
 response = requests.request("GET", url, headers=headers)
 ```
 
-
 ```bash cURL
 curl -X GET "https://www.browserbase.com/v1/sessions/${SESSION_ID}" \
      -H "x-bb-api-key: ${BROWSERBASE_API_KEY}" \
 ```
-
 
 </CodeGroup>
