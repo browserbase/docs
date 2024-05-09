@@ -42,7 +42,7 @@
   },
   "anchors": [
     {
-      "name": "API Reference",
+      "name": "APIs and SDKs",
       "icon": "rectangle-terminal",
       "url": "api-reference"
     }
@@ -86,32 +86,40 @@
       ]
     },
     {
-      "group": "APIs Documentation",
-      "pages": [
-        "api-reference/overview"
-      ]
+      "group": "",
+      "pages": ["api-reference/introduction"]
     },
     {
-      "group": "Connect API",
-      "pages": ["api-reference/connect"]
+      "group": "SDKs",
+      "pages": ["api-reference/sdks", "api-reference/typescript-sdk", "api-reference/python-sdk"]
     },
     {
-      "group": "Sessions API",
+      "group": "APIs",
       "pages": [
-        "api-reference/list-all-sessions",
-        "api-reference/create-a-session",
-        "api-reference/retrieve-a-session",
-        "api-reference/update-a-session",
-        "api-reference/retrieve-a-session-recording",
-        "api-reference/retrieve-a-session-downloads",
-        "api-reference/retrieve-a-session-debug-connection-urls",
-        "api-reference/retrieve-a-session-logs"
-      ]
-    },
-    {
-      "group": "Extensions API",
-      "pages": [
-        "api-reference/upload-an-extension"
+        "api-reference/apis",
+        {
+          "group": "Connect API",
+          "pages": ["api-reference/connect"]
+        },
+        {
+          "group": "Sessions API",
+          "pages": [
+            "api-reference/list-all-sessions",
+            "api-reference/create-a-session",
+            "api-reference/retrieve-a-session",
+            "api-reference/update-a-session",
+            "api-reference/retrieve-a-session-recording",
+            "api-reference/retrieve-a-session-downloads",
+            "api-reference/retrieve-a-session-debug-connection-urls",
+            "api-reference/retrieve-a-session-logs"
+          ]
+        },
+        {
+          "group": "Extensions API",
+          "pages": [
+            "api-reference/upload-an-extension"
+          ]
+        }
       ]
     },
     {
