@@ -499,7 +499,7 @@
             "type": "string",
             "example": "CREATED",
             "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
-            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
+            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING", "COMPLETED"]
           },
           "taskId": {
             "description": "The underlying Task ID",
@@ -711,7 +711,7 @@
             "type": "string",
             "example": "CREATED",
             "description": "[Learn more on Session states](/features/sessions#sessions-lifecycle).",
-            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING"]
+            "enum": ["NEW", "CREATED", "ERROR", "RUNNING", "REQUEST_RELEASE", "RELEASING", "COMPLETED"]
           }
         }
       },
